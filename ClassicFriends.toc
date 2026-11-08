@@ -1,0 +1,37 @@
+## Interface: 16001
+## Title: Classic Friends
+## Notes: The classic friends list for WoW Forever: Battle.net and character friends, search, and the Friends/Who/Guild/Raid tabs.
+## Notes-frFR: La liste d'amis classique pour WoW Forever : amis Battle.net et personnages, recherche, et les onglets Amis/Qui/Guilde/Raid.
+## Notes-deDE: Die klassische Freundesliste für WoW Forever: Battle.net- und Charakterfreunde, Suche und die Reiter Freunde/Wer/Gilde/Schlachtzug.
+## Notes-esES: La lista de amigos clásica para WoW Forever: amigos de Battle.net y personajes, búsqueda y las pestañas Amigos/Quién/Hermandad/Banda.
+## Notes-esMX: La lista de amigos clásica para WoW Forever: amigos de Battle.net y personajes, búsqueda y las pestañas Amigos/Quién/Hermandad/Banda.
+## Notes-itIT: La lista amici classica per WoW Forever: amici Battle.net e personaggi, ricerca e le schede Amici/Chi/Gilda/Incursione.
+## Notes-ptBR: A lista de amigos clássica para WoW Forever: amigos Battle.net e personagens, busca e as abas Amigos/Quem/Guilda/Raide.
+## Notes-ruRU: Классический список друзей для WoW Forever: друзья Battle.net и персонажи, поиск и вкладки Друзья/Кто/Гильдия/Рейд.
+## Notes-koKR: WoW Forever용 클래식 친구 목록: Battle.net 및 캐릭터 친구, 검색, 친구/누구/길드/공격대 탭.
+## Notes-zhCN: WoW Forever 的经典好友列表：战网和角色好友、搜索，以及好友/查询/公会/团队标签。
+## Notes-zhTW: WoW Forever 的經典好友名單：Battle.net 與角色好友、搜尋，以及好友/搜尋/公會/團隊標籤。
+## Author: Buck
+## Version: 1.0.0
+## Category: Social
+## IconTexture: Interface\FriendsFrame\Battlenet-Portrait
+## SavedVariables: ClassicFriendsDB
+## AddonCompartmentFunc: ClassicFriends_OnAddonCompartmentClick
+## X-License: MIT
+## X-Website: https://github.com/abuck199/ClassicFriends
+## OptionalDeps: LibDBIcon-1.0
+
+Libs\LibStub\LibStub.lua
+Libs\CallbackHandler-1.0\CallbackHandler-1.0.lua
+Libs\LibDataBroker-1.1\LibDataBroker-1.1.lua
+Libs\LibDBIcon-1.0\LibDBIcon-1.0.lua
+
+Locales.lua
+Core.lua
+Modules\Window.lua
+Modules\Search.lua
+Modules\FriendRows.lua
+Modules\Skin.lua
+Modules\BottomTabs.lua
+Modules\Minimap.lua
+Modules\Panel.lua
