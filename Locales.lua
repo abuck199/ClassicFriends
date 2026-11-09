@@ -10,6 +10,7 @@ L.VERSION = "Version %s"
 L.CHAT_PREFIX = "Classic Friends:"
 L.NO_FRIENDS_FRAME = "the friends window wasn't found, so the addon is inactive."
 L.CONFLICT_WARNING = "ClassicUI Forever is also enabled and changes the same friends window. Disable one of them to avoid conflicts."
+L.FIRST_RUN_HINT = "type /cfriends or click the gear in your friends list to open the settings."
 L.HELP_HEADER = "commands:"
 L.HELP_LINES = {
 	"  /cfriends           - open the friends list and the settings",
@@ -67,6 +68,8 @@ L.CHATBUTTON_TOOLTIP = "The friends button next to the chat box opens the classi
 L.BOTTOMTABS_PANEL = "Classic bottom tabs"
 L.BOTTOMTABS_DESC = "Friends, Who, Guild, Raid under the list"
 L.BOTTOMTABS_TOOLTIP = "Classic Era's tabs under the window. Who, Guild and Raid open their own windows."
+L.WINDOWSCALE_PANEL = "Window size"
+L.WINDOWSCALE_TOOLTIP = "Make the friends window bigger or smaller. 100% is the normal size."
 
 L.MINIMAPBUTTON_PANEL = "Minimap button"
 L.MINIMAPBUTTON_DESC = "Opens these settings and the friends list"
@@ -108,6 +111,7 @@ if locale == "frFR" then
 	L.CHAT_PREFIX = "Classic Friends :"
 	L.NO_FRIENDS_FRAME = "la fenêtre d'amis est introuvable, l'addon est désactivé."
 	L.CONFLICT_WARNING = "ClassicUI Forever est aussi activé et modifie la même fenêtre d'amis. Désactivez l'un des deux pour éviter les conflits."
+	L.FIRST_RUN_HINT = "tapez /cfriends ou cliquez sur la roue dentée de votre liste d'amis pour ouvrir les options."
 	L.HELP_HEADER = "commandes :"
 	L.HELP_LINES = {
 		"  /cfriends           - ouvrir la liste d'amis et les options",
@@ -160,6 +164,8 @@ if locale == "frFR" then
 	L.BOTTOMTABS_PANEL = "Onglets classiques en bas"
 	L.BOTTOMTABS_DESC = "Amis, Qui, Guilde et Raid sous la liste"
 	L.BOTTOMTABS_TOOLTIP = "Les onglets de Classic Era sous la fenêtre. Qui, Guilde et Raid ouvrent leur propre fenêtre."
+	L.WINDOWSCALE_PANEL = "Taille de la fenêtre"
+	L.WINDOWSCALE_TOOLTIP = "Agrandit ou réduit la fenêtre d'amis. 100 % est la taille normale."
 
 	L.MINIMAPBUTTON_PANEL = "Bouton de la minicarte"
 	L.MINIMAPBUTTON_DESC = "Ouvre ces options et la liste d'amis"
@@ -196,6 +202,7 @@ end
 if locale == "deDE" then
 	L.NO_FRIENDS_FRAME = "das Freundesfenster wurde nicht gefunden, das Addon ist inaktiv."
 	L.CONFLICT_WARNING = "ClassicUI Forever ist ebenfalls aktiviert und verändert dasselbe Freundesfenster. Deaktiviere eines der beiden, um Konflikte zu vermeiden."
+	L.FIRST_RUN_HINT = "gib /cfriends ein oder klicke auf das Zahnrad in deiner Freundesliste, um die Einstellungen zu öffnen."
 	L.HELP_HEADER = "Befehle:"
 	L.HELP_LINES = {
 		"  /cfriends           - Freundesliste und Optionen öffnen",
@@ -238,6 +245,8 @@ if locale == "deDE" then
 	L.BOTTOMTABS_PANEL = "Klassische Reiter unten"
 	L.BOTTOMTABS_DESC = "Freunde, Wer, Gilde, Schlachtzug unten"
 	L.BOTTOMTABS_TOOLTIP = "Die Reiter aus Classic Era unter dem Fenster. Wer, Gilde und Schlachtzug öffnen ihr eigenes Fenster."
+	L.WINDOWSCALE_PANEL = "Fenstergröße"
+	L.WINDOWSCALE_TOOLTIP = "Macht das Freundesfenster größer oder kleiner. 100 % ist die normale Größe."
 
 	L.MINIMAPBUTTON_PANEL = "Minikarten-Knopf"
 	L.MINIMAPBUTTON_DESC = "Öffnet Optionen und Freundesliste"
@@ -274,6 +283,7 @@ end
 if locale == "esES" or locale == "esMX" then
 	L.NO_FRIENDS_FRAME = "no se encontró la ventana de amigos, el addon está inactivo."
 	L.CONFLICT_WARNING = "ClassicUI Forever también está activado y modifica la misma ventana de amigos. Desactiva uno de los dos para evitar conflictos."
+	L.FIRST_RUN_HINT = "escribe /cfriends o haz clic en el engranaje de tu lista de amigos para abrir las opciones."
 	L.HELP_HEADER = "comandos:"
 	L.HELP_LINES = {
 		"  /cfriends           - abrir la lista de amigos y las opciones",
@@ -318,6 +328,8 @@ if locale == "esES" or locale == "esMX" then
 	L.BOTTOMTABS_PANEL = "Pestañas clásicas abajo"
 	L.BOTTOMTABS_DESC = "Amigos, Quién, Hermandad, Banda abajo"
 	L.BOTTOMTABS_TOOLTIP = "Las pestañas de Classic Era bajo la ventana. Quién, Hermandad y Banda abren su propia ventana."
+	L.WINDOWSCALE_PANEL = "Tamaño de la ventana"
+	L.WINDOWSCALE_TOOLTIP = "Agranda o reduce la ventana de amigos. 100 % es el tamaño normal."
 
 	L.MINIMAPBUTTON_PANEL = "Botón del minimapa"
 	L.MINIMAPBUTTON_DESC = "Abre estas opciones y la lista de amigos"
@@ -354,6 +366,7 @@ end
 if locale == "itIT" then
 	L.NO_FRIENDS_FRAME = "la finestra degli amici non è stata trovata, l'addon è inattivo."
 	L.CONFLICT_WARNING = "Anche ClassicUI Forever è attivo e modifica la stessa finestra degli amici. Disattivane uno per evitare conflitti."
+	L.FIRST_RUN_HINT = "scrivi /cfriends o clicca sull'ingranaggio della tua lista amici per aprire le impostazioni."
 	L.HELP_HEADER = "comandi:"
 	L.HELP_LINES = {
 		"  /cfriends           - apri la lista amici e le opzioni",
@@ -396,6 +409,8 @@ if locale == "itIT" then
 	L.BOTTOMTABS_PANEL = "Schede classiche in basso"
 	L.BOTTOMTABS_DESC = "Amici, Chi, Gilda, Incursione in basso"
 	L.BOTTOMTABS_TOOLTIP = "Le schede di Classic Era sotto la finestra. Chi, Gilda e Incursione aprono la propria finestra."
+	L.WINDOWSCALE_PANEL = "Dimensione finestra"
+	L.WINDOWSCALE_TOOLTIP = "Ingrandisce o riduce la finestra degli amici. 100% è la dimensione normale."
 
 	L.MINIMAPBUTTON_PANEL = "Pulsante della minimappa"
 	L.MINIMAPBUTTON_DESC = "Apre queste opzioni e la lista amici"
@@ -432,6 +447,7 @@ end
 if locale == "ptBR" then
 	L.NO_FRIENDS_FRAME = "a janela de amigos não foi encontrada, o addon está inativo."
 	L.CONFLICT_WARNING = "O ClassicUI Forever também está ativado e altera a mesma janela de amigos. Desative um dos dois para evitar conflitos."
+	L.FIRST_RUN_HINT = "digite /cfriends ou clique na engrenagem da sua lista de amigos para abrir as opções."
 	L.HELP_HEADER = "comandos:"
 	L.HELP_LINES = {
 		"  /cfriends           - abrir a lista de amigos e as opções",
@@ -476,6 +492,8 @@ if locale == "ptBR" then
 	L.BOTTOMTABS_PANEL = "Abas clássicas embaixo"
 	L.BOTTOMTABS_DESC = "Amigos, Quem, Guilda, Raide embaixo"
 	L.BOTTOMTABS_TOOLTIP = "As abas do Classic Era embaixo da janela. Quem, Guilda e Raide abrem a própria janela."
+	L.WINDOWSCALE_PANEL = "Tamanho da janela"
+	L.WINDOWSCALE_TOOLTIP = "Aumenta ou diminui a janela de amigos. 100% é o tamanho normal."
 
 	L.MINIMAPBUTTON_PANEL = "Botão do minimapa"
 	L.MINIMAPBUTTON_DESC = "Abre estas opções e a lista de amigos"
@@ -512,6 +530,7 @@ end
 if locale == "ruRU" then
 	L.NO_FRIENDS_FRAME = "окно друзей не найдено, аддон отключён."
 	L.CONFLICT_WARNING = "ClassicUI Forever тоже включён и изменяет то же окно друзей. Отключите один из них, чтобы избежать конфликтов."
+	L.FIRST_RUN_HINT = "введите /cfriends или нажмите на шестерёнку в списке друзей, чтобы открыть настройки."
 	L.HELP_HEADER = "команды:"
 	L.HELP_LINES = {
 		"  /cfriends           - открыть список друзей и настройки",
@@ -554,6 +573,8 @@ if locale == "ruRU" then
 	L.BOTTOMTABS_PANEL = "Классические нижние вкладки"
 	L.BOTTOMTABS_DESC = "Друзья, Кто, Гильдия, Рейд внизу"
 	L.BOTTOMTABS_TOOLTIP = "Вкладки Classic Era под окном. Кто, Гильдия и Рейд открывают собственные окна."
+	L.WINDOWSCALE_PANEL = "Размер окна"
+	L.WINDOWSCALE_TOOLTIP = "Увеличивает или уменьшает окно друзей. 100% — обычный размер."
 
 	L.MINIMAPBUTTON_PANEL = "Кнопка у миникарты"
 	L.MINIMAPBUTTON_DESC = "Открывает настройки и список друзей"
@@ -590,6 +611,7 @@ end
 if locale == "koKR" then
 	L.NO_FRIENDS_FRAME = "친구 창을 찾을 수 없어 애드온이 비활성화되었습니다."
 	L.CONFLICT_WARNING = "ClassicUI Forever도 활성화되어 있으며 같은 친구 창을 변경합니다. 충돌을 피하려면 둘 중 하나를 비활성화하세요."
+	L.FIRST_RUN_HINT = "/cfriends를 입력하거나 친구 목록의 톱니바퀴를 클릭하면 설정을 열 수 있습니다."
 	L.HELP_HEADER = "명령어:"
 	L.HELP_LINES = {
 		"  /cfriends           - 친구 목록과 설정 열기",
@@ -632,6 +654,8 @@ if locale == "koKR" then
 	L.BOTTOMTABS_PANEL = "클래식 하단 탭"
 	L.BOTTOMTABS_DESC = "목록 아래 친구, 누구, 길드, 공격대"
 	L.BOTTOMTABS_TOOLTIP = "창 아래의 Classic Era 탭입니다. 누구, 길드, 공격대는 각자의 창을 엽니다."
+	L.WINDOWSCALE_PANEL = "창 크기"
+	L.WINDOWSCALE_TOOLTIP = "친구 창을 크게 또는 작게 만듭니다. 100%가 기본 크기입니다."
 
 	L.MINIMAPBUTTON_PANEL = "미니맵 버튼"
 	L.MINIMAPBUTTON_DESC = "설정과 친구 목록 열기"
@@ -668,6 +692,7 @@ end
 if locale == "zhCN" then
 	L.NO_FRIENDS_FRAME = "未找到好友窗口，插件已停用。"
 	L.CONFLICT_WARNING = "ClassicUI Forever 也已启用，并且会修改同一个好友窗口。请禁用其中一个以避免冲突。"
+	L.FIRST_RUN_HINT = "输入 /cfriends 或点击好友列表中的齿轮图标即可打开设置。"
 	L.HELP_HEADER = "命令："
 	L.HELP_LINES = {
 		"  /cfriends           - 打开好友列表和设置",
@@ -710,6 +735,8 @@ if locale == "zhCN" then
 	L.BOTTOMTABS_PANEL = "经典底部标签"
 	L.BOTTOMTABS_DESC = "列表下方的好友、查询、公会、团队"
 	L.BOTTOMTABS_TOOLTIP = "窗口下方的经典时代标签。查询、公会和团队会打开各自的窗口。"
+	L.WINDOWSCALE_PANEL = "窗口大小"
+	L.WINDOWSCALE_TOOLTIP = "放大或缩小好友窗口。100% 为默认大小。"
 
 	L.MINIMAPBUTTON_PANEL = "小地图按钮"
 	L.MINIMAPBUTTON_DESC = "打开设置和好友列表"
@@ -746,6 +773,7 @@ end
 if locale == "zhTW" then
 	L.NO_FRIENDS_FRAME = "找不到好友視窗，插件已停用。"
 	L.CONFLICT_WARNING = "ClassicUI Forever 也已啟用，且會修改同一個好友視窗。請停用其中一個以避免衝突。"
+	L.FIRST_RUN_HINT = "輸入 /cfriends 或點擊好友名單中的齒輪圖示即可開啟設定。"
 	L.HELP_HEADER = "指令："
 	L.HELP_LINES = {
 		"  /cfriends           - 開啟好友名單和設定",
@@ -788,6 +816,8 @@ if locale == "zhTW" then
 	L.BOTTOMTABS_PANEL = "經典底部標籤"
 	L.BOTTOMTABS_DESC = "名單下方的好友、搜尋、公會、團隊"
 	L.BOTTOMTABS_TOOLTIP = "視窗下方的經典時代標籤。搜尋、公會與團隊會開啟各自的視窗。"
+	L.WINDOWSCALE_PANEL = "視窗大小"
+	L.WINDOWSCALE_TOOLTIP = "放大或縮小好友視窗。100% 為預設大小。"
 
 	L.MINIMAPBUTTON_PANEL = "小地圖按鈕"
 	L.MINIMAPBUTTON_DESC = "開啟設定和好友名單"

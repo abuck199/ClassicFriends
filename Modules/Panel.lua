@@ -13,6 +13,8 @@ local ROW_HEIGHT = 42
 local SECTION_GAP = 10
 local SECTION_TITLE_HEIGHT = 18
 local SWITCH_WIDTH, SWITCH_HEIGHT, KNOB_SIZE = 34, 18, 14
+local SLIDER_TRACK_HEIGHT, SLIDER_THUMB_SIZE = 4, 14
+local DISABLED_TEXT_ALPHA = 0.4
 
 local COLORS = {
 	background = { 0.05, 0.05, 0.06, 0.96 },
@@ -74,7 +76,7 @@ local KNOB_LEFT_X = SWITCH_HEIGHT / 2
 local KNOB_RIGHT_X = SWITCH_WIDTH - SWITCH_HEIGHT / 2
 local DIMMED_BLEND = 0.6
 
-local function GetSwitchColor(red, green, blue, isDimmed)
+local function GetControlColor(red, green, blue, isDimmed)
 	if isDimmed then
 		local background = COLORS.background
 		return Interpolate(red, background[1], DIMMED_BLEND), Interpolate(green, background[2], DIMMED_BLEND), Interpolate(blue, background[3], DIMMED_BLEND)
@@ -86,7 +88,7 @@ local function DrawSwitch(switch)
 	local progress = switch.position
 	switch.knob:SetPoint("CENTER", switch, "LEFT", Interpolate(KNOB_LEFT_X, KNOB_RIGHT_X, progress), 0)
 
-	local trackRed, trackGreen, trackBlue = GetSwitchColor(
+	local trackRed, trackGreen, trackBlue = GetControlColor(
 		Interpolate(COLORS.trackOff[1], COLORS.accent[1], progress),
 		Interpolate(COLORS.trackOff[2], COLORS.accent[2], progress),
 		Interpolate(COLORS.trackOff[3], COLORS.accent[3], progress),
@@ -95,7 +97,7 @@ local function DrawSwitch(switch)
 		trackPiece:SetVertexColor(trackRed, trackGreen, trackBlue, 1)
 	end
 
-	switch.knob:SetVertexColor(GetSwitchColor(
+	switch.knob:SetVertexColor(GetControlColor(
 		Interpolate(COLORS.knobOff[1], COLORS.knobOn[1], progress),
 		Interpolate(COLORS.knobOff[2], COLORS.knobOn[2], progress),
 		Interpolate(COLORS.knobOff[3], COLORS.knobOn[3], progress),
@@ -186,8 +188,16 @@ local function OptionRow_OnClick(row)
 	addon.SetOption(row.option.key, newValue)
 end
 
-local function CreateOptionRow(option, offsetY)
-	local row = CreateFrame("Button", nil, panel)
+local function RefreshSwitchRow(row, skipAnimation)
+	local textAlpha = row.isAvailable and 1 or DISABLED_TEXT_ALPHA
+	row.label:SetAlpha(textAlpha)
+	row.description:SetAlpha(textAlpha)
+	row.switch.isDimmed = not row.isAvailable
+	SetSwitchState(row.switch, addon.settings[row.option.key], skipAnimation)
+end
+
+local function CreateRow(frameType, option, offsetY)
+	local row = CreateFrame(frameType, nil, panel)
 	row:SetPoint("TOPLEFT", ROW_INSET, offsetY)
 	row:SetPoint("TOPRIGHT", -ROW_INSET, offsetY)
 	row:SetHeight(ROW_HEIGHT)
@@ -202,6 +212,16 @@ local function CreateOptionRow(option, offsetY)
 	row.label:SetJustifyH("LEFT")
 	row.label:SetText(option.label)
 
+	row:SetScript("OnEnter", OptionRow_OnEnter)
+	row:SetScript("OnLeave", OptionRow_OnLeave)
+	table.insert(optionRows, row)
+	return row
+end
+
+local function CreateOptionRow(option, offsetY)
+	local row = CreateRow("Button", option, offsetY)
+	row.Refresh = RefreshSwitchRow
+
 	row.description = row:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
 	row.description:SetPoint("TOPLEFT", row.label, "BOTTOMLEFT", 0, -4)
 	row.description:SetWidth(PANEL_WIDTH - PADDING * 2 - SWITCH_WIDTH - 12)
@@ -212,10 +232,7 @@ local function CreateOptionRow(option, offsetY)
 	row.switch = CreateSwitch(row)
 	row.switch:SetPoint("RIGHT", -(PADDING - ROW_INSET), 0)
 
-	row:SetScript("OnEnter", OptionRow_OnEnter)
-	row:SetScript("OnLeave", OptionRow_OnLeave)
 	row:SetScript("OnClick", OptionRow_OnClick)
-	table.insert(optionRows, row)
 end
 
 local function CreateSectionTitle(text, offsetY)
@@ -228,6 +245,82 @@ local function CreateSectionTitle(text, offsetY)
 	divider:SetHeight(1)
 	divider:SetPoint("LEFT", title, "RIGHT", 8, 0)
 	divider:SetWidth(math.max(10, PANEL_WIDTH - PADDING * 2 - title:GetStringWidth() - 8))
+end
+
+-- Sliders -----------------------------------------------------------------------------------
+
+local function FormatPercent(value)
+	return ("%d%%"):format(math.floor(value * 100 + 0.5))
+end
+
+local function DrawSlider(row)
+	local isDimmed = not row.isAvailable
+	row.sliderTrack:SetVertexColor(GetControlColor(COLORS.trackOff[1], COLORS.trackOff[2], COLORS.trackOff[3], isDimmed))
+	row.sliderFill:SetVertexColor(GetControlColor(COLORS.accent[1], COLORS.accent[2], COLORS.accent[3], isDimmed))
+	row.sliderThumb:SetVertexColor(GetControlColor(COLORS.knobOn[1], COLORS.knobOn[2], COLORS.knobOn[3], isDimmed))
+	row.valueText:SetText(FormatPercent(row.slider:GetValue()))
+end
+
+local function RefreshSliderRow(row)
+	local textAlpha = row.isAvailable and 1 or DISABLED_TEXT_ALPHA
+	row.label:SetAlpha(textAlpha)
+	row.valueText:SetAlpha(textAlpha)
+	row.slider:SetEnabled(row.isAvailable)
+	row.slider:SetValue(addon.settings[row.option.key])
+	DrawSlider(row)
+end
+
+local function Slider_OnValueChanged(slider, value, isUserInput)
+	local row = slider:GetParent()
+	if isUserInput then
+		addon.SetOption(row.option.key, math.floor(value * 100 + 0.5) / 100)
+	end
+	DrawSlider(row)
+end
+
+local function Slider_OnEnter(slider)
+	OptionRow_OnEnter(slider:GetParent())
+end
+
+local function Slider_OnLeave(slider)
+	OptionRow_OnLeave(slider:GetParent())
+end
+
+local function CreateSliderRow(option, offsetY)
+	local row = CreateRow("Frame", option, offsetY)
+	row.Refresh = RefreshSliderRow
+	row:EnableMouse(true)
+
+	row.valueText = row:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
+	row.valueText:SetPoint("TOPRIGHT", -(PADDING - ROW_INSET), -9)
+
+	local slider = CreateFrame("Slider", nil, row)
+	slider:SetPoint("BOTTOMLEFT", PADDING - ROW_INSET, 6)
+	slider:SetPoint("BOTTOMRIGHT", -(PADDING - ROW_INSET), 6)
+	slider:SetHeight(SLIDER_THUMB_SIZE)
+	slider:SetOrientation("HORIZONTAL")
+	slider:SetMinMaxValues(option.minimum, option.maximum)
+	slider:SetValueStep(option.step)
+	slider:SetObeyStepOnDrag(true)
+	slider:SetHitRectInsets(0, 0, -4, -4)
+	row.slider = slider
+
+	row.sliderThumb = CreateCircleTexture(slider, "OVERLAY", SLIDER_THUMB_SIZE)
+	slider:SetThumbTexture(row.sliderThumb)
+
+	row.sliderTrack = CreateSolidTexture(slider, "BACKGROUND", COLORS.trackOff)
+	row.sliderTrack:SetHeight(SLIDER_TRACK_HEIGHT)
+	row.sliderTrack:SetPoint("LEFT")
+	row.sliderTrack:SetPoint("RIGHT")
+
+	row.sliderFill = CreateSolidTexture(slider, "ARTWORK", COLORS.accent)
+	row.sliderFill:SetHeight(SLIDER_TRACK_HEIGHT)
+	row.sliderFill:SetPoint("LEFT")
+	row.sliderFill:SetPoint("RIGHT", row.sliderThumb, "CENTER")
+
+	slider:SetScript("OnValueChanged", Slider_OnValueChanged)
+	slider:SetScript("OnEnter", Slider_OnEnter)
+	slider:SetScript("OnLeave", Slider_OnLeave)
 end
 
 -- GitHub link -------------------------------------------------------------------------------
@@ -390,11 +483,7 @@ function addon.RefreshPanel(skipAnimation)
 	end
 	for _, row in ipairs(optionRows) do
 		row.isAvailable = IsOptionAvailable(row.option)
-		local textAlpha = row.isAvailable and 1 or 0.4
-		row.label:SetAlpha(textAlpha)
-		row.description:SetAlpha(textAlpha)
-		row.switch.isDimmed = not row.isAvailable
-		SetSwitchState(row.switch, addon.settings[row.option.key], skipAnimation)
+		row:Refresh(skipAnimation)
 		if not row.isAvailable then
 			row.hoverHighlight:Hide()
 		end
@@ -492,6 +581,9 @@ local function CreatePanel()
 			offsetY = offsetY - SECTION_GAP
 			CreateSectionTitle(option.header, offsetY)
 			offsetY = offsetY - SECTION_TITLE_HEIGHT
+		elseif option.step then
+			CreateSliderRow(option, offsetY)
+			offsetY = offsetY - ROW_HEIGHT
 		else
 			CreateOptionRow(option, offsetY)
 			offsetY = offsetY - ROW_HEIGHT

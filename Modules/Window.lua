@@ -28,7 +28,8 @@ function addon.ShowClassicWindow()
 	HideNewSocialWindow()
 	if InCombatLockdown() then
 		if FriendsFrame:GetNumPoints() == 0 then
-			FriendsFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 16, -116)
+			local scale = FriendsFrame:GetScale()
+			FriendsFrame:SetPoint("TOPLEFT", UIParent, "TOPLEFT", 16 / scale, -116 / scale)
 		end
 		FriendsFrame:Show()
 		escapeFrame:Show()
@@ -150,6 +151,18 @@ local function HookSlashCommands()
 	end
 end
 
+-- Window size -------------------------------------------------------------------------------
+
+local function ApplyWindowScale()
+	local oldScale = FriendsFrame:GetScale()
+	local newScale = addon.IsEnabled() and addon.settings.windowScale or 1
+	local point, relativeTo, relativePoint, x, y = FriendsFrame:GetPoint(1)
+	FriendsFrame:SetScale(newScale)
+	if point then
+		FriendsFrame:SetPoint(point, relativeTo, relativePoint, x * oldScale / newScale, y * oldScale / newScale)
+	end
+end
+
 -- Recent Allies -----------------------------------------------------------------------------
 
 local function IsFriendsFrameRestricted()
@@ -189,6 +202,7 @@ function addon.SetUpWindow()
 	HookSlashCommands()
 	SetUpRecentAllies()
 	ApplyKeyBindings()
+	ApplyWindowScale()
 
 	local eventFrame = CreateFrame("Frame")
 	eventFrame:RegisterEvent("UPDATE_BINDINGS")
@@ -204,4 +218,5 @@ function addon.SetUpWindow()
 		HideNewSocialWindow()
 		ApplyKeyBindings()
 	end)
+	addon.OnOptionChanged("windowScale", ApplyWindowScale)
 end

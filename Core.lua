@@ -5,6 +5,7 @@ addon.version = C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version") or ""
 
 local DEFAULT_SETTINGS = {
 	enabled = true,
+	windowScale = 1,
 	chatButton = true,
 	bottomTabs = true,
 	minimapButton = true,
@@ -38,9 +39,16 @@ local function DefineOption(key, textKey, requiredOption)
 	}
 end
 
+local function DefineSlider(key, textKey, requiredOption, minimum, maximum, step)
+	local option = DefineOption(key, textKey, requiredOption)
+	option.minimum, option.maximum, option.step = minimum, maximum, step
+	return option
+end
+
 addon.options = {
 	{ header = L.SECTION_GENERAL },
 	DefineOption("enabled", "ENABLED"),
+	DefineSlider("windowScale", "WINDOWSCALE", "enabled", 0.75, 1.5, 0.05),
 	DefineOption("chatButton", "CHATBUTTON", "enabled"),
 	DefineOption("bottomTabs", "BOTTOMTABS", "enabled"),
 	DefineOption("minimapButton", "MINIMAPBUTTON"),
@@ -133,11 +141,7 @@ local function Initialize()
 
 	if not addon.settings.firstRunShown then
 		addon.settings.firstRunShown = true
-		C_Timer.After(3, function()
-			if not addon.IsPanelShown() then
-				addon.TogglePanel()
-			end
-		end)
+		addon.Print(L.FIRST_RUN_HINT)
 	end
 end
 
