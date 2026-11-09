@@ -10,6 +10,7 @@ local DEFAULT_SETTINGS = {
 	minimapButton = true,
 	factionColors = true,
 	classColors = true,
+	levels = true,
 	search = true,
 }
 
@@ -47,6 +48,7 @@ addon.options = {
 	{ header = L.SECTION_LIST },
 	DefineOption("factionColors", "FACTIONCOLORS", "enabled"),
 	DefineOption("classColors", "CLASSCOLORS", "enabled"),
+	DefineOption("levels", "LEVELS", "enabled"),
 	DefineOption("search", "SEARCH", "enabled"),
 }
 

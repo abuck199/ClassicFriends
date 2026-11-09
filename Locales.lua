@@ -48,6 +48,9 @@ L.VERSION_CATA = "Cata Classic"
 L.VERSION_MISTS = "Mists Classic"
 L.VERSION_FOREVER = "Forever"
 L.VERSION_OTHER = "Other version"
+L.RULESET_PVP = "PvP"
+L.RULESET_PVE = "PvE"
+L.OTHER_RULESET_INVITE = "%s realm: you can't group with this friend."
 
 -- Settings panel ----------------------------------------------------------------------------
 L.SECTION_GENERAL = "General"
@@ -73,9 +76,12 @@ L.FACTIONCOLORS_PANEL = "Faction colors"
 L.FACTIONCOLORS_DESC = "Red for Horde, blue for Alliance"
 L.FACTIONCOLORS_TOOLTIP = "Tint the rows of friends playing Forever red for Horde or blue for Alliance.\n\nFriends in another WoW version (Retail, Classic...) keep the normal row, since you can't play with them."
 
-L.CLASSCOLORS_PANEL = "Class colors and level"
-L.CLASSCOLORS_DESC = "Class colors, level, your zone in green"
-L.CLASSCOLORS_TOOLTIP = "Show online friends' character names in their class color, and the character's level next to Battle.net friends.\n\nFriends in another WoW version also show which one, e.g. \"Lvl 80 · Retail\".\n\nFriends in the zone you're in have their zone shown in green."
+L.CLASSCOLORS_PANEL = "Class colors"
+L.CLASSCOLORS_DESC = "Class colors, your zone in green"
+L.CLASSCOLORS_TOOLTIP = "Show online friends' character names in their class color.\n\nFriends in the zone you're in have their zone shown in green."
+L.LEVELS_PANEL = "Level"
+L.LEVELS_DESC = "Level and WoW version under the name"
+L.LEVELS_TOOLTIP = "Show the character's level under each online friend's name, after their zone.\n\nFriends in another WoW version also show which one, e.g. \"Lvl 80 · Retail\"."
 
 L.SEARCH_PANEL = "Search box"
 L.SEARCH_DESC = "Search by BattleTag, name, class, zone"
@@ -136,6 +142,9 @@ if locale == "frFR" then
 	L.VERSION_MISTS = "Mists Classic"
 	L.VERSION_FOREVER = "Forever"
 	L.VERSION_OTHER = "Autre version"
+	L.RULESET_PVP = "JcJ"
+	L.RULESET_PVE = "JcE"
+	L.OTHER_RULESET_INVITE = "Royaume %s : vous ne pouvez pas grouper avec cet ami."
 
 	L.SECTION_GENERAL = "Général"
 	L.SECTION_LIST = "Liste d'amis"
@@ -160,9 +169,12 @@ if locale == "frFR" then
 	L.FACTIONCOLORS_DESC = "Rouge pour la Horde, bleu pour l'Alliance"
 	L.FACTIONCOLORS_TOOLTIP = "Colore les lignes des amis qui jouent à Forever : rouge pour la Horde, bleu pour l'Alliance.\n\nLes amis sur une autre version de WoW (Retail, Classic...) gardent la ligne normale, car vous ne pouvez pas jouer avec eux."
 
-	L.CLASSCOLORS_PANEL = "Couleurs de classe et niveau"
-	L.CLASSCOLORS_DESC = "Couleurs de classe, niveau, zone en vert"
-	L.CLASSCOLORS_TOOLTIP = "Affiche le nom des personnages de vos amis en ligne dans la couleur de leur classe, et le niveau du personnage à côté des amis Battle.net.\n\nLes amis sur une autre version de WoW indiquent laquelle, par ex. \"Niv. 80 · Retail\".\n\nLes amis dans votre zone ont leur zone affichée en vert."
+	L.CLASSCOLORS_PANEL = "Couleurs de classe"
+	L.CLASSCOLORS_DESC = "Couleurs de classe, zone en vert"
+	L.CLASSCOLORS_TOOLTIP = "Affiche le nom des personnages de vos amis en ligne dans la couleur de leur classe.\n\nLes amis dans votre zone ont leur zone affichée en vert."
+	L.LEVELS_PANEL = "Niveau"
+	L.LEVELS_DESC = "Niveau et version de WoW sous le nom"
+	L.LEVELS_TOOLTIP = "Affiche le niveau du personnage sous le nom de vos amis en ligne, après leur zone.\n\nLes amis sur une autre version de WoW indiquent laquelle, par ex. \"Niv. 80 · Retail\"."
 
 	L.SEARCH_PANEL = "Champ de recherche"
 	L.SEARCH_DESC = "Chercher par BattleTag, nom, classe, zone"
@@ -210,6 +222,7 @@ if locale == "deDE" then
 
 	L.LEVEL_SHORT = "Stufe %d"
 	L.VERSION_OTHER = "Andere Version"
+	L.OTHER_RULESET_INVITE = "%s-Realm: Ihr könnt mit diesem Freund keine Gruppe bilden."
 
 	L.SECTION_GENERAL = "Allgemein"
 	L.SECTION_LIST = "Freundesliste"
@@ -234,9 +247,12 @@ if locale == "deDE" then
 	L.FACTIONCOLORS_DESC = "Rot für die Horde, Blau für die Allianz"
 	L.FACTIONCOLORS_TOOLTIP = "Färbt die Zeilen von Freunden in Forever rot für die Horde und blau für die Allianz.\n\nFreunde in einer anderen WoW-Version (Retail, Classic...) behalten die normale Zeile, da ihr nicht zusammen spielen könnt."
 
-	L.CLASSCOLORS_PANEL = "Klassenfarben und Stufe"
-	L.CLASSCOLORS_DESC = "Klassenfarben, Stufe, deine Zone in Grün"
-	L.CLASSCOLORS_TOOLTIP = "Zeigt die Charakternamen deiner Freunde in ihrer Klassenfarbe und bei Battle.net-Freunden die Stufe des Charakters.\n\nFreunde in einer anderen WoW-Version zeigen auch welche, z. B. \"Stufe 80 · Retail\".\n\nBei Freunden in deiner Zone wird die Zone grün angezeigt."
+	L.CLASSCOLORS_PANEL = "Klassenfarben"
+	L.CLASSCOLORS_DESC = "Klassenfarben, deine Zone in Grün"
+	L.CLASSCOLORS_TOOLTIP = "Zeigt die Charakternamen deiner Freunde in ihrer Klassenfarbe.\n\nBei Freunden in deiner Zone wird die Zone grün angezeigt."
+	L.LEVELS_PANEL = "Stufe"
+	L.LEVELS_DESC = "Stufe und WoW-Version unter dem Namen"
+	L.LEVELS_TOOLTIP = "Zeigt die Stufe des Charakters unter dem Namen deiner Freunde, nach ihrer Zone.\n\nFreunde in einer anderen WoW-Version zeigen auch welche, z. B. \"Stufe 80 · Retail\"."
 
 	L.SEARCH_PANEL = "Suchfeld"
 	L.SEARCH_DESC = "Suche nach BattleTag, Name, Klasse, Zone"
@@ -284,6 +300,9 @@ if locale == "esES" or locale == "esMX" then
 
 	L.LEVEL_SHORT = "Nv. %d"
 	L.VERSION_OTHER = "Otra versión"
+	L.RULESET_PVP = "JcJ"
+	L.RULESET_PVE = "JcE"
+	L.OTHER_RULESET_INVITE = "Reino %s: no puedes agruparte con este amigo."
 
 	L.SECTION_GENERAL = "General"
 	L.SECTION_LIST = "Lista de amigos"
@@ -308,9 +327,12 @@ if locale == "esES" or locale == "esMX" then
 	L.FACTIONCOLORS_DESC = "Rojo para la Horda, azul para la Alianza"
 	L.FACTIONCOLORS_TOOLTIP = "Colorea las filas de los amigos que juegan a Forever: rojo para la Horda, azul para la Alianza.\n\nLos amigos en otra versión de WoW (Retail, Classic...) mantienen la fila normal, ya que no puedes jugar con ellos."
 
-	L.CLASSCOLORS_PANEL = "Colores de clase y nivel"
-	L.CLASSCOLORS_DESC = "Color de clase, nivel, tu zona en verde"
-	L.CLASSCOLORS_TOOLTIP = "Muestra el nombre del personaje de tus amigos en línea en el color de su clase, y el nivel del personaje junto a los amigos de Battle.net.\n\nLos amigos en otra versión de WoW indican cuál, p. ej. \"Nv. 80 · Retail\".\n\nLos amigos en tu zona muestran su zona en verde."
+	L.CLASSCOLORS_PANEL = "Colores de clase"
+	L.CLASSCOLORS_DESC = "Color de clase, tu zona en verde"
+	L.CLASSCOLORS_TOOLTIP = "Muestra el nombre del personaje de tus amigos en línea en el color de su clase.\n\nLos amigos en tu zona muestran su zona en verde."
+	L.LEVELS_PANEL = "Nivel"
+	L.LEVELS_DESC = "Nivel y versión de WoW bajo el nombre"
+	L.LEVELS_TOOLTIP = "Muestra el nivel del personaje bajo el nombre de tus amigos en línea, después de su zona.\n\nLos amigos en otra versión de WoW indican cuál, p. ej. \"Nv. 80 · Retail\"."
 
 	L.SEARCH_PANEL = "Campo de búsqueda"
 	L.SEARCH_DESC = "Busca por BattleTag, nombre, clase, zona"
@@ -358,6 +380,7 @@ if locale == "itIT" then
 
 	L.LEVEL_SHORT = "Liv. %d"
 	L.VERSION_OTHER = "Altra versione"
+	L.OTHER_RULESET_INVITE = "Reame %s: non puoi formare un gruppo con questo amico."
 
 	L.SECTION_GENERAL = "Generale"
 	L.SECTION_LIST = "Lista amici"
@@ -382,9 +405,12 @@ if locale == "itIT" then
 	L.FACTIONCOLORS_DESC = "Rosso per l'Orda, blu per l'Alleanza"
 	L.FACTIONCOLORS_TOOLTIP = "Colora le righe degli amici che giocano a Forever: rosso per l'Orda, blu per l'Alleanza.\n\nGli amici su un'altra versione di WoW (Retail, Classic...) mantengono la riga normale, perché non puoi giocare con loro."
 
-	L.CLASSCOLORS_PANEL = "Colori di classe e livello"
-	L.CLASSCOLORS_DESC = "Colori di classe, livello, zona in verde"
-	L.CLASSCOLORS_TOOLTIP = "Mostra il nome del personaggio dei tuoi amici online nel colore della sua classe, e il livello del personaggio accanto agli amici Battle.net.\n\nGli amici su un'altra versione di WoW indicano quale, ad es. \"Liv. 80 · Retail\".\n\nGli amici nella tua zona hanno la zona in verde."
+	L.CLASSCOLORS_PANEL = "Colori di classe"
+	L.CLASSCOLORS_DESC = "Colori di classe, zona in verde"
+	L.CLASSCOLORS_TOOLTIP = "Mostra il nome del personaggio dei tuoi amici online nel colore della sua classe.\n\nGli amici nella tua zona hanno la zona in verde."
+	L.LEVELS_PANEL = "Livello"
+	L.LEVELS_DESC = "Livello e versione di WoW sotto il nome"
+	L.LEVELS_TOOLTIP = "Mostra il livello del personaggio sotto il nome dei tuoi amici online, dopo la zona.\n\nGli amici su un'altra versione di WoW indicano quale, ad es. \"Liv. 80 · Retail\"."
 
 	L.SEARCH_PANEL = "Campo di ricerca"
 	L.SEARCH_DESC = "Cerca per BattleTag, nome, classe, zona"
@@ -432,6 +458,9 @@ if locale == "ptBR" then
 
 	L.LEVEL_SHORT = "Nv. %d"
 	L.VERSION_OTHER = "Outra versão"
+	L.RULESET_PVP = "JxJ"
+	L.RULESET_PVE = "JxA"
+	L.OTHER_RULESET_INVITE = "Reino %s: você não pode formar grupo com este amigo."
 
 	L.SECTION_GENERAL = "Geral"
 	L.SECTION_LIST = "Lista de amigos"
@@ -456,9 +485,12 @@ if locale == "ptBR" then
 	L.FACTIONCOLORS_DESC = "Vermelho: Horda, azul: Aliança"
 	L.FACTIONCOLORS_TOOLTIP = "Colore as linhas dos amigos que jogam Forever: vermelho para a Horda, azul para a Aliança.\n\nAmigos em outra versão do WoW (Retail, Classic...) mantêm a linha normal, pois você não pode jogar com eles."
 
-	L.CLASSCOLORS_PANEL = "Cores de classe e nível"
-	L.CLASSCOLORS_DESC = "Cor da classe, nível, sua zona em verde"
-	L.CLASSCOLORS_TOOLTIP = "Mostra o nome do personagem dos seus amigos online na cor da classe, e o nível do personagem ao lado dos amigos Battle.net.\n\nAmigos em outra versão do WoW mostram qual, ex.: \"Nv. 80 · Retail\".\n\nAmigos na sua zona têm a zona em verde."
+	L.CLASSCOLORS_PANEL = "Cores de classe"
+	L.CLASSCOLORS_DESC = "Cor da classe, sua zona em verde"
+	L.CLASSCOLORS_TOOLTIP = "Mostra o nome do personagem dos seus amigos online na cor da classe.\n\nAmigos na sua zona têm a zona em verde."
+	L.LEVELS_PANEL = "Nível"
+	L.LEVELS_DESC = "Nível e versão do WoW abaixo do nome"
+	L.LEVELS_TOOLTIP = "Mostra o nível do personagem abaixo do nome dos seus amigos online, depois da zona.\n\nAmigos em outra versão do WoW mostram qual, ex.: \"Nv. 80 · Retail\"."
 
 	L.SEARCH_PANEL = "Campo de busca"
 	L.SEARCH_DESC = "Busca por BattleTag, nome, classe, zona"
@@ -506,6 +538,7 @@ if locale == "ruRU" then
 
 	L.LEVEL_SHORT = "Ур. %d"
 	L.VERSION_OTHER = "Другая версия"
+	L.OTHER_RULESET_INVITE = "Игровой мир %s: нельзя собрать группу с этим другом."
 
 	L.SECTION_GENERAL = "Общие"
 	L.SECTION_LIST = "Список друзей"
@@ -530,9 +563,12 @@ if locale == "ruRU" then
 	L.FACTIONCOLORS_DESC = "Красный — Орда, синий — Альянс"
 	L.FACTIONCOLORS_TOOLTIP = "Окрашивает строки друзей, играющих в Forever: красный для Орды, синий для Альянса.\n\nДрузья в другой версии WoW (Retail, Classic...) остаются с обычной строкой, так как играть с ними нельзя."
 
-	L.CLASSCOLORS_PANEL = "Цвета классов и уровень"
-	L.CLASSCOLORS_DESC = "Цвет класса, уровень, зона зелёным"
-	L.CLASSCOLORS_TOOLTIP = "Показывает имена персонажей друзей в сети цветом их класса и уровень персонажа у друзей Battle.net.\n\nДрузья в другой версии WoW показывают, в какой, например \"Ур. 80 · Retail\".\n\nУ друзей в вашей зоне зона показана зелёным."
+	L.CLASSCOLORS_PANEL = "Цвета классов"
+	L.CLASSCOLORS_DESC = "Цвет класса, зона зелёным"
+	L.CLASSCOLORS_TOOLTIP = "Показывает имена персонажей друзей в сети цветом их класса.\n\nУ друзей в вашей зоне зона показана зелёным."
+	L.LEVELS_PANEL = "Уровень"
+	L.LEVELS_DESC = "Уровень и версия WoW под именем"
+	L.LEVELS_TOOLTIP = "Показывает уровень персонажа под именем друзей в сети, после их зоны.\n\nДрузья в другой версии WoW показывают, в какой, например \"Ур. 80 · Retail\"."
 
 	L.SEARCH_PANEL = "Поле поиска"
 	L.SEARCH_DESC = "Поиск по BattleTag, имени, классу, зоне"
@@ -580,6 +616,7 @@ if locale == "koKR" then
 
 	L.LEVEL_SHORT = "%d레벨"
 	L.VERSION_OTHER = "다른 버전"
+	L.OTHER_RULESET_INVITE = "%s 서버: 이 친구와 파티를 맺을 수 없습니다."
 
 	L.SECTION_GENERAL = "일반"
 	L.SECTION_LIST = "친구 목록"
@@ -604,9 +641,12 @@ if locale == "koKR" then
 	L.FACTIONCOLORS_DESC = "호드는 빨강, 얼라이언스는 파랑"
 	L.FACTIONCOLORS_TOOLTIP = "Forever를 플레이 중인 친구의 줄을 호드는 빨강, 얼라이언스는 파랑으로 칠합니다.\n\n다른 WoW 버전(Retail, Classic...)의 친구는 함께 플레이할 수 없으므로 기본 줄을 유지합니다."
 
-	L.CLASSCOLORS_PANEL = "직업 색상과 레벨"
-	L.CLASSCOLORS_DESC = "직업 색상, 레벨, 내 지역은 녹색"
-	L.CLASSCOLORS_TOOLTIP = "접속 중인 친구의 캐릭터 이름을 직업 색상으로, Battle.net 친구 옆에 캐릭터 레벨을 표시합니다.\n\n다른 WoW 버전의 친구는 버전도 표시합니다. 예: \"80레벨 · Retail\".\n\n내 지역에 있는 친구는 지역이 녹색으로 표시됩니다."
+	L.CLASSCOLORS_PANEL = "직업 색상"
+	L.CLASSCOLORS_DESC = "직업 색상, 내 지역은 녹색"
+	L.CLASSCOLORS_TOOLTIP = "접속 중인 친구의 캐릭터 이름을 직업 색상으로 표시합니다.\n\n내 지역에 있는 친구는 지역이 녹색으로 표시됩니다."
+	L.LEVELS_PANEL = "레벨"
+	L.LEVELS_DESC = "이름 아래에 레벨과 WoW 버전"
+	L.LEVELS_TOOLTIP = "접속 중인 친구의 이름 아래, 지역 뒤에 캐릭터 레벨을 표시합니다.\n\n다른 WoW 버전의 친구는 버전도 표시합니다. 예: \"80레벨 · Retail\"."
 
 	L.SEARCH_PANEL = "검색창"
 	L.SEARCH_DESC = "배틀태그, 이름, 직업, 지역으로 검색"
@@ -654,6 +694,7 @@ if locale == "zhCN" then
 
 	L.LEVEL_SHORT = "%d级"
 	L.VERSION_OTHER = "其他版本"
+	L.OTHER_RULESET_INVITE = "%s服务器：无法与该好友组队。"
 
 	L.SECTION_GENERAL = "常规"
 	L.SECTION_LIST = "好友列表"
@@ -678,9 +719,12 @@ if locale == "zhCN" then
 	L.FACTIONCOLORS_DESC = "部落为红色，联盟为蓝色"
 	L.FACTIONCOLORS_TOOLTIP = "为正在玩 Forever 的好友的行着色：部落为红色，联盟为蓝色。\n\n其他 WoW 版本（Retail、Classic……）的好友保持普通行，因为你无法与他们一起游戏。"
 
-	L.CLASSCOLORS_PANEL = "职业颜色和等级"
-	L.CLASSCOLORS_DESC = "职业颜色、等级、同区域显示绿色"
-	L.CLASSCOLORS_TOOLTIP = "以职业颜色显示在线好友的角色名，并在战网好友旁显示角色等级。\n\n其他 WoW 版本的好友会显示所在版本，例如“80级 · Retail”。\n\n与你在同一区域的好友，其区域显示为绿色。"
+	L.CLASSCOLORS_PANEL = "职业颜色"
+	L.CLASSCOLORS_DESC = "职业颜色、同区域显示绿色"
+	L.CLASSCOLORS_TOOLTIP = "以职业颜色显示在线好友的角色名。\n\n与你在同一区域的好友，其区域显示为绿色。"
+	L.LEVELS_PANEL = "等级"
+	L.LEVELS_DESC = "在名字下方显示等级和 WoW 版本"
+	L.LEVELS_TOOLTIP = "好友在线时，在其名字下方、区域之后显示角色等级。\n\n其他 WoW 版本的好友会显示所在版本，例如“80级 · Retail”。"
 
 	L.SEARCH_PANEL = "搜索框"
 	L.SEARCH_DESC = "按战网昵称、名字、职业、区域搜索"
@@ -728,6 +772,7 @@ if locale == "zhTW" then
 
 	L.LEVEL_SHORT = "%d級"
 	L.VERSION_OTHER = "其他版本"
+	L.OTHER_RULESET_INVITE = "%s伺服器：無法與該好友組隊。"
 
 	L.SECTION_GENERAL = "一般"
 	L.SECTION_LIST = "好友名單"
@@ -752,9 +797,12 @@ if locale == "zhTW" then
 	L.FACTIONCOLORS_DESC = "部落為紅色，聯盟為藍色"
 	L.FACTIONCOLORS_TOOLTIP = "為正在玩 Forever 的好友的列著色：部落為紅色，聯盟為藍色。\n\n其他 WoW 版本（Retail、Classic……）的好友維持一般的列，因為你無法與他們一起遊戲。"
 
-	L.CLASSCOLORS_PANEL = "職業顏色與等級"
-	L.CLASSCOLORS_DESC = "職業顏色、等級、同區域顯示綠色"
-	L.CLASSCOLORS_TOOLTIP = "以職業顏色顯示上線好友的角色名稱，並在 Battle.net 好友旁顯示角色等級。\n\n其他 WoW 版本的好友會顯示所在版本，例如「80級 · Retail」。\n\n與你在同一區域的好友，其區域會顯示為綠色。"
+	L.CLASSCOLORS_PANEL = "職業顏色"
+	L.CLASSCOLORS_DESC = "職業顏色、同區域顯示綠色"
+	L.CLASSCOLORS_TOOLTIP = "以職業顏色顯示上線好友的角色名稱。\n\n與你在同一區域的好友，其區域會顯示為綠色。"
+	L.LEVELS_PANEL = "等級"
+	L.LEVELS_DESC = "在名稱下方顯示等級和 WoW 版本"
+	L.LEVELS_TOOLTIP = "好友上線時，在其名稱下方、區域之後顯示角色等級。\n\n其他 WoW 版本的好友會顯示所在版本，例如「80級 · Retail」。"
 
 	L.SEARCH_PANEL = "搜尋框"
 	L.SEARCH_DESC = "依 BattleTag、名字、職業、區域搜尋"

@@ -9,6 +9,7 @@ local FACTION_TINT_ALPHA_LEFT, FACTION_TINT_ALPHA_RIGHT = 0.30, 0.03
 local DETAILS_COLOR_CODE = "|cffb4b4b4"
 local ZONE_TEXT_COLOR = FRIENDS_GRAY_COLOR
 local SAME_ZONE_TEXT_COLOR = GREEN_FONT_COLOR
+local FOREVER_GAME_ICON = "WoWF"
 
 local GAME_VERSION_NAMES = {
 	[1] = L.VERSION_RETAIL,
@@ -19,6 +20,11 @@ local GAME_VERSION_NAMES = {
 	[14] = L.VERSION_CATA,
 	[18] = L.VERSION_FOREVER,
 	[19] = L.VERSION_MISTS,
+}
+
+local RULESET_NAMES = {
+	PvP = L.RULESET_PVP,
+	PvE = L.RULESET_PVE,
 }
 
 local friendWasClicked = false
@@ -41,36 +47,60 @@ local function GetCharacterFriendClass(friendInfo)
 	end
 end
 
-local function GetBattleNetFriendText(accountInfo, gameInfo)
+local function GetRuleset(realmName)
+	if realmName and not issecretvalue(realmName) then
+		return realmName:match("%d%s*(%a+)$")
+	end
+end
+
+local function GetOtherRulesetName(gameInfo)
+	local friendRuleset = GetRuleset(gameInfo.realmName)
+	local playerRuleset = GetRuleset(GetRealmName())
+	if friendRuleset and playerRuleset and friendRuleset ~= playerRuleset then
+		return RULESET_NAMES[friendRuleset] or friendRuleset
+	end
+end
+
+local function GetLevelText(level)
+	if level and not issecretvalue(level) and level > 0 then
+		return L.LEVEL_SHORT:format(level)
+	end
+end
+
+local function GetBattleNetFriendName(accountInfo, gameInfo)
 	local characterName = FriendsFrame_GetFormattedCharacterName(gameInfo.characterName, nil, gameInfo.clientProgram, gameInfo.timerunningSeasonID)
 	if not characterName or characterName == "" or issecretvalue(characterName) then
 		return nil
 	end
 	local bracketColorCode = CanCooperateWithGameAccount(accountInfo) and FRIENDS_WOW_NAME_COLOR_CODE or FRIENDS_OTHER_NAME_COLOR_CODE
 	local nameColorCode = GetClassColorCode(gameInfo.classFilename) or bracketColorCode
-	local friendText = BNet_GetBNetAccountName(accountInfo) .. " "
+	return BNet_GetBNetAccountName(accountInfo) .. " "
 		.. bracketColorCode .. "(|r" .. nameColorCode .. characterName .. "|r" .. bracketColorCode .. ")|r"
+end
 
-	local details = {}
-	local level = gameInfo.characterLevel
-	if level and not issecretvalue(level) and level > 0 then
-		table.insert(details, L.LEVEL_SHORT:format(level))
-	end
+local function GetBattleNetFriendDetails(gameInfo)
+	local details = { GetLevelText(gameInfo.characterLevel) }
 	if gameInfo.wowProjectID ~= WOW_PROJECT_ID then
 		table.insert(details, GAME_VERSION_NAMES[gameInfo.wowProjectID] or L.VERSION_OTHER)
 	end
-	if #details > 0 then
-		friendText = friendText .. " " .. DETAILS_COLOR_CODE .. table.concat(details, L.VERSION_SEPARATOR) .. "|r"
-	end
-	return friendText
+	return details
 end
 
-local function GetCharacterFriendText(friendInfo)
-	local classColorCode = GetClassColorCode(GetCharacterFriendClass(friendInfo))
-	if not classColorCode or not friendInfo.name or issecretvalue(friendInfo.name) then
+local function GetCharacterFriendName(friendInfo, settings)
+	if not friendInfo.name or issecretvalue(friendInfo.name) then
 		return nil
 	end
-	return classColorCode .. friendInfo.name .. "|r, " .. FRIENDS_LEVEL_TEMPLATE:format(friendInfo.level, friendInfo.className)
+	local classColorCode = settings.classColors and GetClassColorCode(GetCharacterFriendClass(friendInfo))
+	local name = classColorCode and classColorCode .. friendInfo.name .. "|r" or friendInfo.name
+	if settings.levels then
+		return name
+	end
+	return name .. ", " .. FRIENDS_LEVEL_TEMPLATE:format(friendInfo.level, friendInfo.className)
+end
+
+local function ShowDetailsAfterZone(row, details)
+	local detailsText = DETAILS_COLOR_CODE .. L.VERSION_SEPARATOR .. table.concat(details, L.VERSION_SEPARATOR) .. "|r"
+	row.info:SetText(row.info:GetText() .. detailsText)
 end
 
 local function IsInPlayerZone(zoneName)
@@ -121,6 +151,14 @@ end
 
 -- Rows --------------------------------------------------------------------------------------
 
+local function InviteButton_OnEnter(inviteButton)
+	if inviteButton.classicFriendsRuleset then
+		local text = L.OTHER_RULESET_INVITE:format(inviteButton.classicFriendsRuleset)
+		GameTooltip:AddLine(text, RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b, true)
+		GameTooltip:Show()
+	end
+end
+
 local function StyleFriendRow(_, row, friendData)
 	if not friendData or not addon.IsFriend(friendData) then
 		return
@@ -128,8 +166,10 @@ local function StyleFriendRow(_, row, friendData)
 	if not row.classicFriendsHooked then
 		row:HookScript("OnClick", FriendRow_OnClick)
 		row:HookScript("OnDoubleClick", FriendRow_OnDoubleClick)
+		row.travelPassButton:HookScript("OnEnter", InviteButton_OnEnter)
 		row.classicFriendsHooked = true
 	end
+	row.travelPassButton.classicFriendsRuleset = nil
 	row.background:SetVertexColor(1, 1, 1, 1)
 	row.info:SetTextColor(ZONE_TEXT_COLOR:GetRGB())
 	if not addon.IsEnabled() then
@@ -140,7 +180,8 @@ local function StyleFriendRow(_, row, friendData)
 	end
 
 	local settings = addon.settings
-	local nameText, faction, zoneName
+	local nameText, faction, zoneName, rulesetName
+	local details = {}
 	local isInSameGame = true
 	if friendData.buttonType == FRIENDS_BUTTON_TYPE_BNET then
 		local accountInfo = C_BattleNet.GetFriendAccountInfo(friendData.id)
@@ -150,18 +191,38 @@ local function StyleFriendRow(_, row, friendData)
 		end
 		faction, zoneName = gameInfo.factionName, gameInfo.areaName
 		isInSameGame = gameInfo.wowProjectID == WOW_PROJECT_ID
-		nameText = settings.classColors and GetBattleNetFriendText(accountInfo, gameInfo)
+		rulesetName = isInSameGame and GetOtherRulesetName(gameInfo)
+		nameText = settings.classColors and GetBattleNetFriendName(accountInfo, gameInfo)
+		if settings.levels then
+			details = GetBattleNetFriendDetails(gameInfo)
+		end
+		if rulesetName then
+			table.insert(details, rulesetName)
+		end
+		if isInSameGame and not gameInfo.subIcon then
+			C_Texture.SetTitleIconTexture(row.gameIcon, BNET_CLIENT_WOW, Enum.TitleIconVersion.Medium, FOREVER_GAME_ICON)
+		end
 	else
 		local friendInfo = C_FriendList.GetFriendInfoByIndex(friendData.id)
 		if not (friendInfo and friendInfo.connected) then
 			return
 		end
 		faction, zoneName = UnitFactionGroup("player"), friendInfo.area
-		nameText = settings.classColors and GetCharacterFriendText(friendInfo)
+		nameText = GetCharacterFriendName(friendInfo, settings)
+		if settings.levels then
+			details = { GetLevelText(friendInfo.level) }
+		end
 	end
 
 	if nameText then
 		row.name:SetText(nameText)
+	end
+	if #details > 0 then
+		ShowDetailsAfterZone(row, details)
+	end
+	if rulesetName then
+		row.travelPassButton:Disable()
+		row.travelPassButton.classicFriendsRuleset = rulesetName
 	end
 	if settings.classColors and isInSameGame and IsInPlayerZone(zoneName) then
 		row.info:SetTextColor(SAME_ZONE_TEXT_COLOR:GetRGB())
@@ -193,6 +254,7 @@ function addon.SetUpFriendRows()
 
 	addon.OnOptionChanged("factionColors", RefreshFriendRows)
 	addon.OnOptionChanged("classColors", RefreshFriendRows)
+	addon.OnOptionChanged("levels", RefreshFriendRows)
 
 	local eventFrame = CreateFrame("Frame")
 	eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
