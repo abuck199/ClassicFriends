@@ -151,6 +151,40 @@ local function HookSlashCommands()
 	end
 end
 
+-- New social window tabs --------------------------------------------------------------------
+
+local newWindowRequested = false
+
+function addon.OpenNewSocialWindow()
+	newWindowRequested = true
+	addon.HideClassicWindow()
+	ToggleFriendsFrame()
+end
+
+local function SocialTab_OnSelected(_, tabType)
+	if newWindowRequested or not addon.IsEnabled() then
+		return
+	end
+	local opensRecentAllies = tabType == SocialUITabType.RecentAllies
+	if tabType ~= SocialUITabType.Friends and tabType ~= SocialUITabType.FriendRequests and not opensRecentAllies then
+		return
+	end
+	RunNextFrame(function()
+		HideNewSocialWindow()
+		addon.ShowClassicWindow()
+		if opensRecentAllies then
+			FriendsTabHeader:SelectTab(FriendsTabHeader.recentAlliesTabID)
+		end
+	end)
+end
+
+local function RedirectSocialTabs()
+	hooksecurefunc(SocialUIFrame, "SelectTab", SocialTab_OnSelected)
+	SocialUIFrame:HookScript("OnHide", function()
+		newWindowRequested = false
+	end)
+end
+
 -- Window size -------------------------------------------------------------------------------
 
 local function ApplyWindowScale()
@@ -203,6 +237,7 @@ function addon.SetUpWindow()
 	SetUpRecentAllies()
 	ApplyKeyBindings()
 	ApplyWindowScale()
+	EventUtil.ContinueOnAddOnLoaded("Blizzard_SocialUI", RedirectSocialTabs)
 
 	local eventFrame = CreateFrame("Frame")
 	eventFrame:RegisterEvent("UPDATE_BINDINGS")

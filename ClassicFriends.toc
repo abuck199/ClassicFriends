@@ -12,7 +12,7 @@
 ## Notes-zhCN: WoW Forever 的经典好友列表：战网和角色好友、搜索，以及好友/查询/公会/团队标签。
 ## Notes-zhTW: WoW Forever 的經典好友名單：Battle.net 與角色好友、搜尋，以及好友/搜尋/公會/團隊標籤。
 ## Author: Buck
-## Version: 1.0.2
+## Version: 1.0.3
 ## Category: Social
 ## IconTexture: Interface\FriendsFrame\Battlenet-Portrait
 ## SavedVariables: ClassicFriendsDB

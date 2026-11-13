@@ -172,8 +172,7 @@ SlashCmdList.CLASSICFRIENDS = function(input)
 		end
 		addon.TogglePanel()
 	elseif command == "new" then
-		addon.HideClassicWindow()
-		ToggleFriendsFrame()
+		addon.OpenNewSocialWindow()
 	else
 		addon.Print(L.HELP_HEADER)
 		for _, helpLine in ipairs(L.HELP_LINES) do
