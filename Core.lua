@@ -6,12 +6,14 @@ addon.version = C_AddOns.GetAddOnMetadata(ADDON_NAME, "Version") or ""
 local DEFAULT_SETTINGS = {
 	enabled = true,
 	windowScale = 1,
+	windowHeight = 1,
 	chatButton = true,
 	bottomTabs = true,
 	minimapButton = true,
 	factionColors = true,
 	classColors = true,
 	levels = true,
+	smartSorting = false,
 	search = true,
 }
 
@@ -29,18 +31,18 @@ end
 
 -- Settings ----------------------------------------------------------------------------------
 
-local function DefineOption(key, textKey, requiredOption)
+local function DefineOption(key, textKey, requiredOption, isNew)
 	return {
 		key = key,
 		requires = requiredOption,
+		isNew = isNew,
 		label = L[textKey .. "_PANEL"],
-		description = L[textKey .. "_DESC"],
 		tooltip = L[textKey .. "_TOOLTIP"],
 	}
 end
 
-local function DefineSlider(key, textKey, requiredOption, minimum, maximum, step)
-	local option = DefineOption(key, textKey, requiredOption)
+local function DefineSlider(key, textKey, requiredOption, minimum, maximum, step, isNew)
+	local option = DefineOption(key, textKey, requiredOption, isNew)
 	option.minimum, option.maximum, option.step = minimum, maximum, step
 	return option
 end
@@ -48,16 +50,20 @@ end
 addon.options = {
 	{ header = L.SECTION_GENERAL },
 	DefineOption("enabled", "ENABLED"),
-	DefineSlider("windowScale", "WINDOWSCALE", "enabled", 0.75, 1.5, 0.05),
 	DefineOption("chatButton", "CHATBUTTON", "enabled"),
 	DefineOption("bottomTabs", "BOTTOMTABS", "enabled"),
 	DefineOption("minimapButton", "MINIMAPBUTTON"),
 
+	{ header = L.SECTION_WINDOW },
+	DefineSlider("windowScale", "WINDOWSCALE", "enabled", 0.75, 1.5, 0.01),
+	DefineSlider("windowHeight", "WINDOWHEIGHT", "enabled", 1, 1.8, 0.01, true),
+
 	{ header = L.SECTION_LIST },
+	DefineOption("smartSorting", "SMARTSORT", "enabled", true),
+	DefineOption("search", "SEARCH", "enabled"),
 	DefineOption("factionColors", "FACTIONCOLORS", "enabled"),
 	DefineOption("classColors", "CLASSCOLORS", "enabled"),
 	DefineOption("levels", "LEVELS", "enabled"),
-	DefineOption("search", "SEARCH", "enabled"),
 }
 
 addon.optionsByKey = {}
@@ -116,6 +122,7 @@ local function LoadSettings()
 			ClassicFriendsDB[key] = defaultValue
 		end
 	end
+	ClassicFriendsDB.panelPosition = nil
 	addon.settings = ClassicFriendsDB
 	enabledAtLogin = addon.settings.enabled
 end
@@ -141,6 +148,7 @@ local function Initialize()
 
 	if not addon.settings.firstRunShown then
 		addon.settings.firstRunShown = true
+		addon.MarkNewOptionsSeen()
 		addon.Print(L.FIRST_RUN_HINT)
 	end
 end
@@ -167,9 +175,6 @@ SlashCmdList.CLASSICFRIENDS = function(input)
 	end
 	local command = strtrim(input:lower())
 	if command == "" then
-		if not addon.IsPanelShown() and addon.IsEnabled() then
-			addon.ShowClassicWindow()
-		end
 		addon.TogglePanel()
 	elseif command == "new" then
 		addon.OpenNewSocialWindow()

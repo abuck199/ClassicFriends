@@ -187,6 +187,13 @@ end
 
 -- Window size -------------------------------------------------------------------------------
 
+local defaultWindowHeight
+
+local function ApplyWindowHeight()
+	local heightScale = addon.IsEnabled() and addon.settings.windowHeight or 1
+	FriendsFrame:SetHeight(defaultWindowHeight * heightScale)
+end
+
 local function ApplyWindowScale()
 	local oldScale = FriendsFrame:GetScale()
 	local newScale = addon.IsEnabled() and addon.settings.windowScale or 1
@@ -236,6 +243,8 @@ function addon.SetUpWindow()
 	HookSlashCommands()
 	SetUpRecentAllies()
 	ApplyKeyBindings()
+	defaultWindowHeight = FriendsFrame:GetHeight()
+	ApplyWindowHeight()
 	ApplyWindowScale()
 	EventUtil.ContinueOnAddOnLoaded("Blizzard_SocialUI", RedirectSocialTabs)
 
@@ -254,4 +263,5 @@ function addon.SetUpWindow()
 		ApplyKeyBindings()
 	end)
 	addon.OnOptionChanged("windowScale", ApplyWindowScale)
+	addon.OnOptionChanged("windowHeight", ApplyWindowHeight)
 end

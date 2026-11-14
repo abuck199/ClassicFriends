@@ -4,9 +4,10 @@ local L = addon.L
 local LIST_TOP_OFFSET = -87
 local SEARCH_BAR_HEIGHT = 30
 local SEARCH_BAR_GAP = 3
+local SEARCH_DELAY = 0.15
 
 local searchBar, searchBox, noResultsText
-local searchWords
+local searchWords, searchTimer
 
 local function AddSearchableText(searchableTexts, text)
 	if type(text) ~= "string" or text == "" or issecretvalue(text) then
@@ -62,25 +63,85 @@ local function MatchesSearch(friendData)
 	return true
 end
 
-local function FilterFriendsList()
-	if not searchWords or not FriendsListFrame:IsShown() then
+-- Order -------------------------------------------------------------------------------------
+
+local CAN_INVITE, SAME_GAME, OTHER_GAME = 1, 2, 3
+
+local function IsOnPlayerFaction(gameInfo)
+	if C_PartyInfo.CanFormCrossFactionParties() then
+		return true
+	end
+	local faction = gameInfo.factionName
+	return faction ~= nil and not issecretvalue(faction) and faction == UnitFactionGroup("player")
+end
+
+local function GetInvitePriority(friendData)
+	if friendData.buttonType == FRIENDS_BUTTON_TYPE_WOW then
+		local friendInfo = C_FriendList.GetFriendInfoByIndex(friendData.id)
+		return friendInfo and friendInfo.connected and CAN_INVITE or OTHER_GAME
+	end
+	local accountInfo = C_BattleNet.GetFriendAccountInfo(friendData.id)
+	local gameInfo = accountInfo and accountInfo.gameAccountInfo
+	if not (gameInfo and gameInfo.isOnline and gameInfo.clientProgram == BNET_CLIENT_WOW and gameInfo.wowProjectID == WOW_PROJECT_ID) then
+		return OTHER_GAME
+	end
+	if IsOnPlayerFaction(gameInfo) and addon.IsOnPlayerRuleset(gameInfo) then
+		return CAN_INVITE
+	end
+	return SAME_GAME
+end
+
+local function InsertFriends(dataProvider, friends, smartSorting)
+	if not smartSorting then
+		dataProvider:InsertTable(friends)
+		return
+	end
+	local friendsByPriority = { {}, {}, {} }
+	for _, friendData in ipairs(friends) do
+		table.insert(friendsByPriority[GetInvitePriority(friendData)], friendData)
+	end
+	for _, priorityGroup in ipairs(friendsByPriority) do
+		dataProvider:InsertTable(priorityGroup)
+	end
+end
+
+local function UpdateDisplayedFriends()
+	local isSearching = searchWords ~= nil
+	local smartSorting = addon.IsEnabled() and addon.settings.smartSorting
+	if not FriendsListFrame:IsShown() or not (isSearching or smartSorting) then
 		noResultsText:Hide()
 		return
 	end
 	local scrollBox = FriendsListFrame.ScrollBox
-	local allFriends = scrollBox:GetDataProvider()
-	if not allFriends then
+	local allEntries = scrollBox:GetDataProvider()
+	if not allEntries then
 		return
 	end
-	local matchingFriends = CreateDataProvider()
-	for _, friendData in allFriends:EnumerateEntireRange() do
-		if addon.IsFriend(friendData) and MatchesSearch(friendData) then
-			matchingFriends:Insert(friendData)
+	local displayedEntries = CreateDataProvider()
+	local friendGroup = {}
+	for _, entry in allEntries:EnumerateEntireRange() do
+		if addon.IsFriend(entry) then
+			if not isSearching or MatchesSearch(entry) then
+				table.insert(friendGroup, entry)
+			end
+		elseif not isSearching then
+			InsertFriends(displayedEntries, friendGroup, smartSorting)
+			friendGroup = {}
+			displayedEntries:Insert(entry)
 		end
 	end
-	scrollBox:SetDataProvider(matchingFriends, ScrollBoxConstants.RetainScrollPosition)
-	noResultsText:SetShown(matchingFriends:IsEmpty())
+	InsertFriends(displayedEntries, friendGroup, smartSorting)
+	scrollBox:SetDataProvider(displayedEntries, ScrollBoxConstants.RetainScrollPosition)
+	noResultsText:SetShown(isSearching and displayedEntries:IsEmpty())
 end
+
+local function RefreshFriendsList()
+	if FriendsListFrame:IsShown() then
+		FriendsList_Update(true)
+	end
+end
+
+-- Search box --------------------------------------------------------------------------------
 
 local function SetSearchText(text)
 	searchWords = nil
@@ -91,9 +152,23 @@ local function SetSearchText(text)
 			table.insert(searchWords, word)
 		end
 	end
-	if FriendsListFrame:IsShown() then
-		FriendsList_Update(true)
+	RefreshFriendsList()
+end
+
+local function SearchBox_OnTextChanged(editBox)
+	if searchTimer then
+		searchTimer:Cancel()
+		searchTimer = nil
 	end
+	local text = editBox:GetText()
+	if text == "" then
+		SetSearchText(text)
+		return
+	end
+	searchTimer = C_Timer.NewTimer(SEARCH_DELAY, function()
+		searchTimer = nil
+		SetSearchText(text)
+	end)
 end
 
 local function ClearSearch()
@@ -160,9 +235,7 @@ local function CreateSearchBar()
 	searchBox.Instructions:SetText(L.SEARCH_PLACEHOLDER)
 	searchBox:HookScript("OnEnter", ShowSearchTooltip)
 	searchBox:HookScript("OnLeave", GameTooltip_Hide)
-	searchBox:HookScript("OnTextChanged", function(editBox)
-		SetSearchText(editBox:GetText())
-	end)
+	searchBox:HookScript("OnTextChanged", SearchBox_OnTextChanged)
 	searchBox:HookScript("OnEnterPressed", function(editBox)
 		editBox:ClearFocus()
 	end)
@@ -175,7 +248,7 @@ end
 
 function addon.SetUpSearch()
 	CreateSearchBar()
-	hooksecurefunc("FriendsList_Update", FilterFriendsList)
+	hooksecurefunc("FriendsList_Update", UpdateDisplayedFriends)
 
 	FriendsFrame:HookScript("OnHide", function()
 		ClearSearch()
@@ -184,5 +257,6 @@ function addon.SetUpSearch()
 
 	addon.OnOptionChanged("enabled", UpdateSearchBar)
 	addon.OnOptionChanged("search", UpdateSearchBar)
+	addon.OnOptionChanged("smartSorting", RefreshFriendsList)
 	UpdateSearchBar()
 end

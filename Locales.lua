@@ -55,39 +55,38 @@ L.OTHER_RULESET_INVITE = "%s realm: you can't group with this friend."
 
 -- Settings panel ----------------------------------------------------------------------------
 L.SECTION_GENERAL = "General"
+L.SECTION_WINDOW = "Window"
 L.SECTION_LIST = "Friends List"
 
 L.ENABLED_PANEL = "Classic friends window"
-L.ENABLED_DESC = "Replaces Forever's new social window"
 L.ENABLED_TOOLTIP = "Open the classic friends list instead of Forever's new social window.\n\nTurn off to get Forever's window back without disabling the addon."
 
 L.CHATBUTTON_PANEL = "Chat friends button"
-L.CHATBUTTON_DESC = "The button next to chat opens it too"
 L.CHATBUTTON_TOOLTIP = "The friends button next to the chat box opens the classic window.\n\nQuick-join notifications on that button always open Forever's Quick Join list."
 
 L.BOTTOMTABS_PANEL = "Classic bottom tabs"
-L.BOTTOMTABS_DESC = "Friends, Who, Guild, Raid under the list"
 L.BOTTOMTABS_TOOLTIP = "Classic Era's tabs under the window. Who, Guild and Raid open their own windows."
 L.WINDOWSCALE_PANEL = "Window size"
 L.WINDOWSCALE_TOOLTIP = "Make the friends window bigger or smaller. 100% is the normal size."
+L.WINDOWHEIGHT_PANEL = "Window height"
+L.WINDOWHEIGHT_TOOLTIP = "Make the friends window taller to see more friends at once. 100% is the normal height."
 
 L.MINIMAPBUTTON_PANEL = "Minimap button"
-L.MINIMAPBUTTON_DESC = "Opens these settings and the friends list"
 L.MINIMAPBUTTON_TOOLTIP = "A button on the edge of the minimap.\n\nLeft-click opens these settings, right-click opens the friends list. Drag it to move it around the minimap."
 
 L.FACTIONCOLORS_PANEL = "Faction colors"
-L.FACTIONCOLORS_DESC = "Red for Horde, blue for Alliance"
 L.FACTIONCOLORS_TOOLTIP = "Tint the rows of friends playing Forever red for Horde or blue for Alliance.\n\nFriends in another WoW version (Retail, Classic...) keep the normal row, since you can't play with them."
 
 L.CLASSCOLORS_PANEL = "Class colors"
-L.CLASSCOLORS_DESC = "Class colors, your zone in green"
 L.CLASSCOLORS_TOOLTIP = "Show online friends' character names in their class color.\n\nFriends in the zone you're in have their zone shown in green."
 L.LEVELS_PANEL = "Level"
-L.LEVELS_DESC = "Level and WoW version under the name"
 L.LEVELS_TOOLTIP = "Show the character's level under each online friend's name, after their zone.\n\nFriends in another WoW version also show which one, e.g. \"Lvl 80 · Retail\"."
+L.SMARTSORT_PANEL = "Smart sorting"
+L.SMARTSORT_TOOLTIP = "Online friends are sorted by who you can invite:\n\n1. Same WoW version, faction and ruleset\n2. Same WoW version, other faction or ruleset\n3. Other WoW versions and other games\n\nOffline friends stay at the bottom."
+L.SMARTSORT_TIP = "New: Smart sorting puts the friends you can invite at the top. Try it in the settings!"
+L.NEW_BADGE = "NEW"
 
 L.SEARCH_PANEL = "Search box"
-L.SEARCH_DESC = "Search by BattleTag, name, class, zone"
 L.SEARCH_TOOLTIP = "A search box above the list. Searches BattleTag, character name, class, race, zone and realm."
 
 L.REQUIRES = "Needs \"%s\" turned on."
@@ -96,10 +95,11 @@ L.RELOAD_PROMPT = "Reload the interface to finish switching the friends window?"
 L.RELOAD_LATER = "Later"
 
 L.GITHUB_TITLE = "Bugs and suggestions"
-L.GITHUB_LINK = "Report a bug or suggest an idea"
 L.GITHUB_TOOLTIP = "Found a bug, or have an idea to make the addon better? Click to get the link to its GitHub page."
 L.GITHUB_COPY = "Press Ctrl+C to copy the link, then paste it into your browser."
 L.GITHUB_COPIED = "Copied!"
+L.CURSEFORGE_TITLE = "CurseForge"
+L.CURSEFORGE_TOOLTIP = "Enjoying the addon? A rating or a comment on CurseForge helps other players find it. Click to get the link."
 
 local locale = GetLocale()
 
@@ -151,39 +151,38 @@ if locale == "frFR" then
 	L.OTHER_RULESET_INVITE = "Royaume %s : vous ne pouvez pas grouper avec cet ami."
 
 	L.SECTION_GENERAL = "Général"
+	L.SECTION_WINDOW = "Fenêtre"
 	L.SECTION_LIST = "Liste d'amis"
 
 	L.ENABLED_PANEL = "Fenêtre d'amis classique"
-	L.ENABLED_DESC = "Remplace la nouvelle fenêtre de Forever"
 	L.ENABLED_TOOLTIP = "Ouvre la liste d'amis classique au lieu de la nouvelle fenêtre sociale de Forever.\n\nDésactivez pour retrouver la fenêtre de Forever sans désactiver l'addon."
 
 	L.CHATBUTTON_PANEL = "Bouton d'amis du chat"
-	L.CHATBUTTON_DESC = "Le bouton à côté du chat l'ouvre aussi"
 	L.CHATBUTTON_TOOLTIP = "Le bouton d'amis à côté du chat ouvre la fenêtre classique.\n\nLes notifications de groupe rapide sur ce bouton ouvrent toujours la liste de Forever."
 
 	L.BOTTOMTABS_PANEL = "Onglets classiques en bas"
-	L.BOTTOMTABS_DESC = "Amis, Qui, Guilde et Raid sous la liste"
 	L.BOTTOMTABS_TOOLTIP = "Les onglets de Classic Era sous la fenêtre. Qui, Guilde et Raid ouvrent leur propre fenêtre."
 	L.WINDOWSCALE_PANEL = "Taille de la fenêtre"
 	L.WINDOWSCALE_TOOLTIP = "Agrandit ou réduit la fenêtre d'amis. 100 % est la taille normale."
+	L.WINDOWHEIGHT_PANEL = "Hauteur de la fenêtre"
+	L.WINDOWHEIGHT_TOOLTIP = "Allonge la fenêtre d'amis pour voir plus d'amis à la fois. 100 % est la hauteur normale."
 
 	L.MINIMAPBUTTON_PANEL = "Bouton de la minicarte"
-	L.MINIMAPBUTTON_DESC = "Ouvre ces options et la liste d'amis"
 	L.MINIMAPBUTTON_TOOLTIP = "Un bouton au bord de la minicarte.\n\nClic gauche : ces options, clic droit : la liste d'amis. Glissez-le pour le déplacer autour de la minicarte."
 
 	L.FACTIONCOLORS_PANEL = "Couleurs de faction"
-	L.FACTIONCOLORS_DESC = "Rouge pour la Horde, bleu pour l'Alliance"
 	L.FACTIONCOLORS_TOOLTIP = "Colore les lignes des amis qui jouent à Forever : rouge pour la Horde, bleu pour l'Alliance.\n\nLes amis sur une autre version de WoW (Retail, Classic...) gardent la ligne normale, car vous ne pouvez pas jouer avec eux."
 
 	L.CLASSCOLORS_PANEL = "Couleurs de classe"
-	L.CLASSCOLORS_DESC = "Couleurs de classe, zone en vert"
 	L.CLASSCOLORS_TOOLTIP = "Affiche le nom des personnages de vos amis en ligne dans la couleur de leur classe.\n\nLes amis dans votre zone ont leur zone affichée en vert."
 	L.LEVELS_PANEL = "Niveau"
-	L.LEVELS_DESC = "Niveau et version de WoW sous le nom"
 	L.LEVELS_TOOLTIP = "Affiche le niveau du personnage sous le nom de vos amis en ligne, après leur zone.\n\nLes amis sur une autre version de WoW indiquent laquelle, par ex. \"Niv. 80 · Retail\"."
+	L.SMARTSORT_PANEL = "Tri intelligent"
+	L.SMARTSORT_TOOLTIP = "Les amis en ligne sont triés selon ceux que vous pouvez inviter :\n\n1. Même version de WoW, faction et type de royaume\n2. Même version de WoW, autre faction ou type de royaume\n3. Autres versions de WoW et autres jeux\n\nLes amis hors ligne restent en bas."
+	L.SMARTSORT_TIP = "Nouveau : le tri intelligent place en haut les amis que vous pouvez inviter. Essayez-le dans les options !"
+	L.NEW_BADGE = "NOUVEAU"
 
 	L.SEARCH_PANEL = "Champ de recherche"
-	L.SEARCH_DESC = "Chercher par BattleTag, nom, classe, zone"
 	L.SEARCH_TOOLTIP = "Un champ de recherche au-dessus de la liste. Cherche dans le BattleTag, le nom du personnage, la classe, la race, la zone et le royaume."
 
 	L.REQUIRES = "Nécessite d'activer \"%s\"."
@@ -192,10 +191,10 @@ if locale == "frFR" then
 	L.RELOAD_LATER = "Plus tard"
 
 	L.GITHUB_TITLE = "Bugs et suggestions"
-	L.GITHUB_LINK = "Signaler un bug ou proposer une idée"
 	L.GITHUB_TOOLTIP = "Un bug, ou une idée pour améliorer l'addon ? Clique pour obtenir le lien de sa page GitHub."
 	L.GITHUB_COPY = "Fais Ctrl+C pour copier le lien, puis colle-le dans ton navigateur."
 	L.GITHUB_COPIED = "Copié !"
+	L.CURSEFORGE_TOOLTIP = "Vous aimez l'addon ? Une note ou un commentaire sur CurseForge aide d'autres joueurs à le trouver. Cliquez pour obtenir le lien."
 end
 
 -- German ------------------------------------------------------------------------------------
@@ -232,39 +231,38 @@ if locale == "deDE" then
 	L.OTHER_RULESET_INVITE = "%s-Realm: Ihr könnt mit diesem Freund keine Gruppe bilden."
 
 	L.SECTION_GENERAL = "Allgemein"
+	L.SECTION_WINDOW = "Fenster"
 	L.SECTION_LIST = "Freundesliste"
 
 	L.ENABLED_PANEL = "Klassisches Freundesfenster"
-	L.ENABLED_DESC = "Ersetzt Forevers neues Sozialfenster"
 	L.ENABLED_TOOLTIP = "Öffnet die klassische Freundesliste statt Forevers neuem Sozialfenster.\n\nAusschalten, um Forevers Fenster zurückzubekommen, ohne das Addon zu deaktivieren."
 
 	L.CHATBUTTON_PANEL = "Freunde-Knopf am Chat"
-	L.CHATBUTTON_DESC = "Der Knopf neben dem Chat öffnet es auch"
 	L.CHATBUTTON_TOOLTIP = "Der Freunde-Knopf neben dem Chatfenster öffnet das klassische Fenster.\n\nSchnellbeitritt-Hinweise auf diesem Knopf öffnen weiterhin Forevers Liste."
 
 	L.BOTTOMTABS_PANEL = "Klassische Reiter unten"
-	L.BOTTOMTABS_DESC = "Freunde, Wer, Gilde, Schlachtzug unten"
 	L.BOTTOMTABS_TOOLTIP = "Die Reiter aus Classic Era unter dem Fenster. Wer, Gilde und Schlachtzug öffnen ihr eigenes Fenster."
 	L.WINDOWSCALE_PANEL = "Fenstergröße"
 	L.WINDOWSCALE_TOOLTIP = "Macht das Freundesfenster größer oder kleiner. 100 % ist die normale Größe."
+	L.WINDOWHEIGHT_PANEL = "Fensterhöhe"
+	L.WINDOWHEIGHT_TOOLTIP = "Macht das Freundesfenster höher, damit mehr Freunde auf einmal sichtbar sind. 100 % ist die normale Höhe."
 
 	L.MINIMAPBUTTON_PANEL = "Minikarten-Knopf"
-	L.MINIMAPBUTTON_DESC = "Öffnet Optionen und Freundesliste"
 	L.MINIMAPBUTTON_TOOLTIP = "Ein Knopf am Rand der Minikarte.\n\nLinksklick öffnet diese Optionen, Rechtsklick die Freundesliste. Ziehen, um ihn um die Minikarte zu bewegen."
 
 	L.FACTIONCOLORS_PANEL = "Fraktionsfarben"
-	L.FACTIONCOLORS_DESC = "Rot für die Horde, Blau für die Allianz"
 	L.FACTIONCOLORS_TOOLTIP = "Färbt die Zeilen von Freunden in Forever rot für die Horde und blau für die Allianz.\n\nFreunde in einer anderen WoW-Version (Retail, Classic...) behalten die normale Zeile, da ihr nicht zusammen spielen könnt."
 
 	L.CLASSCOLORS_PANEL = "Klassenfarben"
-	L.CLASSCOLORS_DESC = "Klassenfarben, deine Zone in Grün"
 	L.CLASSCOLORS_TOOLTIP = "Zeigt die Charakternamen deiner Freunde in ihrer Klassenfarbe.\n\nBei Freunden in deiner Zone wird die Zone grün angezeigt."
 	L.LEVELS_PANEL = "Stufe"
-	L.LEVELS_DESC = "Stufe und WoW-Version unter dem Namen"
 	L.LEVELS_TOOLTIP = "Zeigt die Stufe des Charakters unter dem Namen deiner Freunde, nach ihrer Zone.\n\nFreunde in einer anderen WoW-Version zeigen auch welche, z. B. \"Stufe 80 · Retail\"."
+	L.SMARTSORT_PANEL = "Intelligente Sortierung"
+	L.SMARTSORT_TOOLTIP = "Online-Freunde werden danach sortiert, wen du einladen kannst:\n\n1. Gleiche WoW-Version, Fraktion und Realmtyp\n2. Gleiche WoW-Version, andere Fraktion oder anderer Realmtyp\n3. Andere WoW-Versionen und andere Spiele\n\nOffline-Freunde bleiben unten."
+	L.SMARTSORT_TIP = "Neu: Die intelligente Sortierung zeigt Freunde, die du einladen kannst, ganz oben. Probier sie in den Einstellungen aus!"
+	L.NEW_BADGE = "NEU"
 
 	L.SEARCH_PANEL = "Suchfeld"
-	L.SEARCH_DESC = "Suche nach BattleTag, Name, Klasse, Zone"
 	L.SEARCH_TOOLTIP = "Ein Suchfeld über der Liste. Durchsucht BattleTag, Charaktername, Klasse, Volk, Zone und Realm."
 
 	L.REQUIRES = "Benötigt \"%s\"."
@@ -273,10 +271,10 @@ if locale == "deDE" then
 	L.RELOAD_LATER = "Später"
 
 	L.GITHUB_TITLE = "Fehler und Vorschläge"
-	L.GITHUB_LINK = "Fehler melden oder Idee vorschlagen"
 	L.GITHUB_TOOLTIP = "Einen Fehler gefunden oder eine Idee, wie das Addon besser wird? Klicke, um den Link zur GitHub-Seite zu erhalten."
 	L.GITHUB_COPY = "Drücke Strg+C, um den Link zu kopieren, und füge ihn dann in deinen Browser ein."
 	L.GITHUB_COPIED = "Kopiert!"
+	L.CURSEFORGE_TOOLTIP = "Gefällt dir das Addon? Eine Bewertung oder ein Kommentar auf CurseForge hilft anderen Spielern, es zu finden. Klicke, um den Link zu erhalten."
 end
 
 -- Spanish -----------------------------------------------------------------------------------
@@ -315,39 +313,38 @@ if locale == "esES" or locale == "esMX" then
 	L.OTHER_RULESET_INVITE = "Reino %s: no puedes agruparte con este amigo."
 
 	L.SECTION_GENERAL = "General"
+	L.SECTION_WINDOW = "Ventana"
 	L.SECTION_LIST = "Lista de amigos"
 
 	L.ENABLED_PANEL = "Ventana de amigos clásica"
-	L.ENABLED_DESC = "Sustituye la nueva ventana de Forever"
 	L.ENABLED_TOOLTIP = "Abre la lista de amigos clásica en lugar de la nueva ventana social de Forever.\n\nDesactívalo para recuperar la ventana de Forever sin desactivar el addon."
 
 	L.CHATBUTTON_PANEL = "Botón de amigos del chat"
-	L.CHATBUTTON_DESC = "El botón junto al chat también la abre"
 	L.CHATBUTTON_TOOLTIP = "El botón de amigos junto al chat abre la ventana clásica.\n\nLos avisos de unión rápida en ese botón siguen abriendo la lista de Forever."
 
 	L.BOTTOMTABS_PANEL = "Pestañas clásicas abajo"
-	L.BOTTOMTABS_DESC = "Amigos, Quién, Hermandad, Banda abajo"
 	L.BOTTOMTABS_TOOLTIP = "Las pestañas de Classic Era bajo la ventana. Quién, Hermandad y Banda abren su propia ventana."
 	L.WINDOWSCALE_PANEL = "Tamaño de la ventana"
 	L.WINDOWSCALE_TOOLTIP = "Agranda o reduce la ventana de amigos. 100 % es el tamaño normal."
+	L.WINDOWHEIGHT_PANEL = "Altura de la ventana"
+	L.WINDOWHEIGHT_TOOLTIP = "Alarga la ventana de amigos para ver más amigos a la vez. 100 % es la altura normal."
 
 	L.MINIMAPBUTTON_PANEL = "Botón del minimapa"
-	L.MINIMAPBUTTON_DESC = "Abre estas opciones y la lista de amigos"
 	L.MINIMAPBUTTON_TOOLTIP = "Un botón en el borde del minimapa.\n\nClic izquierdo abre estas opciones, clic derecho la lista de amigos. Arrástralo para moverlo alrededor del minimapa."
 
 	L.FACTIONCOLORS_PANEL = "Colores de facción"
-	L.FACTIONCOLORS_DESC = "Rojo para la Horda, azul para la Alianza"
 	L.FACTIONCOLORS_TOOLTIP = "Colorea las filas de los amigos que juegan a Forever: rojo para la Horda, azul para la Alianza.\n\nLos amigos en otra versión de WoW (Retail, Classic...) mantienen la fila normal, ya que no puedes jugar con ellos."
 
 	L.CLASSCOLORS_PANEL = "Colores de clase"
-	L.CLASSCOLORS_DESC = "Color de clase, tu zona en verde"
 	L.CLASSCOLORS_TOOLTIP = "Muestra el nombre del personaje de tus amigos en línea en el color de su clase.\n\nLos amigos en tu zona muestran su zona en verde."
 	L.LEVELS_PANEL = "Nivel"
-	L.LEVELS_DESC = "Nivel y versión de WoW bajo el nombre"
 	L.LEVELS_TOOLTIP = "Muestra el nivel del personaje bajo el nombre de tus amigos en línea, después de su zona.\n\nLos amigos en otra versión de WoW indican cuál, p. ej. \"Nv. 80 · Retail\"."
+	L.SMARTSORT_PANEL = "Orden inteligente"
+	L.SMARTSORT_TOOLTIP = "Los amigos conectados se ordenan según a quién puedes invitar:\n\n1. Misma versión de WoW, facción y tipo de reino\n2. Misma versión de WoW, otra facción u otro tipo de reino\n3. Otras versiones de WoW y otros juegos\n\nLos amigos desconectados quedan abajo."
+	L.SMARTSORT_TIP = "Nuevo: el orden inteligente pone arriba a los amigos que puedes invitar. ¡Pruébalo en las opciones!"
+	L.NEW_BADGE = "NUEVO"
 
 	L.SEARCH_PANEL = "Campo de búsqueda"
-	L.SEARCH_DESC = "Busca por BattleTag, nombre, clase, zona"
 	L.SEARCH_TOOLTIP = "Un campo de búsqueda sobre la lista. Busca en BattleTag, nombre del personaje, clase, raza, zona y reino."
 
 	L.REQUIRES = "Requiere activar \"%s\"."
@@ -356,10 +353,10 @@ if locale == "esES" or locale == "esMX" then
 	L.RELOAD_LATER = "Más tarde"
 
 	L.GITHUB_TITLE = "Errores y sugerencias"
-	L.GITHUB_LINK = "Informar de un error o sugerir una idea"
 	L.GITHUB_TOOLTIP = "¿Has encontrado un error o tienes una idea para mejorar el addon? Haz clic para obtener el enlace a su página de GitHub."
 	L.GITHUB_COPY = "Pulsa Ctrl+C para copiar el enlace y pégalo en tu navegador."
 	L.GITHUB_COPIED = "¡Copiado!"
+	L.CURSEFORGE_TOOLTIP = "¿Te gusta el addon? Una valoración o un comentario en CurseForge ayuda a otros jugadores a encontrarlo. Haz clic para obtener el enlace."
 end
 
 -- Italian -----------------------------------------------------------------------------------
@@ -396,39 +393,38 @@ if locale == "itIT" then
 	L.OTHER_RULESET_INVITE = "Reame %s: non puoi formare un gruppo con questo amico."
 
 	L.SECTION_GENERAL = "Generale"
+	L.SECTION_WINDOW = "Finestra"
 	L.SECTION_LIST = "Lista amici"
 
 	L.ENABLED_PANEL = "Finestra amici classica"
-	L.ENABLED_DESC = "Sostituisce la nuova finestra di Forever"
 	L.ENABLED_TOOLTIP = "Apre la lista amici classica al posto della nuova finestra social di Forever.\n\nDisattivala per riavere la finestra di Forever senza disattivare l'addon."
 
 	L.CHATBUTTON_PANEL = "Pulsante amici della chat"
-	L.CHATBUTTON_DESC = "Anche il pulsante della chat la apre"
 	L.CHATBUTTON_TOOLTIP = "Il pulsante amici accanto alla chat apre la finestra classica.\n\nGli avvisi di partecipazione rapida su quel pulsante aprono sempre la lista di Forever."
 
 	L.BOTTOMTABS_PANEL = "Schede classiche in basso"
-	L.BOTTOMTABS_DESC = "Amici, Chi, Gilda, Incursione in basso"
 	L.BOTTOMTABS_TOOLTIP = "Le schede di Classic Era sotto la finestra. Chi, Gilda e Incursione aprono la propria finestra."
 	L.WINDOWSCALE_PANEL = "Dimensione finestra"
 	L.WINDOWSCALE_TOOLTIP = "Ingrandisce o riduce la finestra degli amici. 100% è la dimensione normale."
+	L.WINDOWHEIGHT_PANEL = "Altezza finestra"
+	L.WINDOWHEIGHT_TOOLTIP = "Allunga la finestra degli amici per vedere più amici alla volta. 100% è l'altezza normale."
 
 	L.MINIMAPBUTTON_PANEL = "Pulsante della minimappa"
-	L.MINIMAPBUTTON_DESC = "Apre queste opzioni e la lista amici"
 	L.MINIMAPBUTTON_TOOLTIP = "Un pulsante sul bordo della minimappa.\n\nClic sinistro apre queste opzioni, clic destro la lista amici. Trascinalo per spostarlo intorno alla minimappa."
 
 	L.FACTIONCOLORS_PANEL = "Colori di fazione"
-	L.FACTIONCOLORS_DESC = "Rosso per l'Orda, blu per l'Alleanza"
 	L.FACTIONCOLORS_TOOLTIP = "Colora le righe degli amici che giocano a Forever: rosso per l'Orda, blu per l'Alleanza.\n\nGli amici su un'altra versione di WoW (Retail, Classic...) mantengono la riga normale, perché non puoi giocare con loro."
 
 	L.CLASSCOLORS_PANEL = "Colori di classe"
-	L.CLASSCOLORS_DESC = "Colori di classe, zona in verde"
 	L.CLASSCOLORS_TOOLTIP = "Mostra il nome del personaggio dei tuoi amici online nel colore della sua classe.\n\nGli amici nella tua zona hanno la zona in verde."
 	L.LEVELS_PANEL = "Livello"
-	L.LEVELS_DESC = "Livello e versione di WoW sotto il nome"
 	L.LEVELS_TOOLTIP = "Mostra il livello del personaggio sotto il nome dei tuoi amici online, dopo la zona.\n\nGli amici su un'altra versione di WoW indicano quale, ad es. \"Liv. 80 · Retail\"."
+	L.SMARTSORT_PANEL = "Ordinamento intelligente"
+	L.SMARTSORT_TOOLTIP = "Gli amici online sono ordinati in base a chi puoi invitare:\n\n1. Stessa versione di WoW, fazione e tipo di reame\n2. Stessa versione di WoW, altra fazione o tipo di reame\n3. Altre versioni di WoW e altri giochi\n\nGli amici offline restano in fondo."
+	L.SMARTSORT_TIP = "Novità: l'ordinamento intelligente mette in alto gli amici che puoi invitare. Provalo nelle impostazioni!"
+	L.NEW_BADGE = "NUOVO"
 
 	L.SEARCH_PANEL = "Campo di ricerca"
-	L.SEARCH_DESC = "Cerca per BattleTag, nome, classe, zona"
 	L.SEARCH_TOOLTIP = "Un campo di ricerca sopra la lista. Cerca in BattleTag, nome del personaggio, classe, razza, zona e reame."
 
 	L.REQUIRES = "Richiede di attivare \"%s\"."
@@ -437,10 +433,10 @@ if locale == "itIT" then
 	L.RELOAD_LATER = "Più tardi"
 
 	L.GITHUB_TITLE = "Bug e suggerimenti"
-	L.GITHUB_LINK = "Segnala un bug o proponi un'idea"
 	L.GITHUB_TOOLTIP = "Hai trovato un bug o hai un'idea per migliorare l'addon? Clicca per ottenere il link alla sua pagina GitHub."
 	L.GITHUB_COPY = "Premi Ctrl+C per copiare il link, poi incollalo nel browser."
 	L.GITHUB_COPIED = "Copiato!"
+	L.CURSEFORGE_TOOLTIP = "Ti piace l'addon? Un voto o un commento su CurseForge aiuta altri giocatori a trovarlo. Clicca per ottenere il link."
 end
 
 -- Brazilian Portuguese ----------------------------------------------------------------------
@@ -479,39 +475,38 @@ if locale == "ptBR" then
 	L.OTHER_RULESET_INVITE = "Reino %s: você não pode formar grupo com este amigo."
 
 	L.SECTION_GENERAL = "Geral"
+	L.SECTION_WINDOW = "Janela"
 	L.SECTION_LIST = "Lista de amigos"
 
 	L.ENABLED_PANEL = "Janela de amigos clássica"
-	L.ENABLED_DESC = "Substitui a nova janela do Forever"
 	L.ENABLED_TOOLTIP = "Abre a lista de amigos clássica no lugar da nova janela social do Forever.\n\nDesative para ter a janela do Forever de volta sem desativar o addon."
 
 	L.CHATBUTTON_PANEL = "Botão de amigos do chat"
-	L.CHATBUTTON_DESC = "O botão ao lado do chat também a abre"
 	L.CHATBUTTON_TOOLTIP = "O botão de amigos ao lado do chat abre a janela clássica.\n\nOs avisos de entrada rápida nesse botão continuam abrindo a lista do Forever."
 
 	L.BOTTOMTABS_PANEL = "Abas clássicas embaixo"
-	L.BOTTOMTABS_DESC = "Amigos, Quem, Guilda, Raide embaixo"
 	L.BOTTOMTABS_TOOLTIP = "As abas do Classic Era embaixo da janela. Quem, Guilda e Raide abrem a própria janela."
 	L.WINDOWSCALE_PANEL = "Tamanho da janela"
 	L.WINDOWSCALE_TOOLTIP = "Aumenta ou diminui a janela de amigos. 100% é o tamanho normal."
+	L.WINDOWHEIGHT_PANEL = "Altura da janela"
+	L.WINDOWHEIGHT_TOOLTIP = "Aumenta a altura da janela de amigos para ver mais amigos de uma vez. 100% é a altura normal."
 
 	L.MINIMAPBUTTON_PANEL = "Botão do minimapa"
-	L.MINIMAPBUTTON_DESC = "Abre estas opções e a lista de amigos"
 	L.MINIMAPBUTTON_TOOLTIP = "Um botão na borda do minimapa.\n\nClique esquerdo abre estas opções, clique direito a lista de amigos. Arraste para movê-lo ao redor do minimapa."
 
 	L.FACTIONCOLORS_PANEL = "Cores de facção"
-	L.FACTIONCOLORS_DESC = "Vermelho: Horda, azul: Aliança"
 	L.FACTIONCOLORS_TOOLTIP = "Colore as linhas dos amigos que jogam Forever: vermelho para a Horda, azul para a Aliança.\n\nAmigos em outra versão do WoW (Retail, Classic...) mantêm a linha normal, pois você não pode jogar com eles."
 
 	L.CLASSCOLORS_PANEL = "Cores de classe"
-	L.CLASSCOLORS_DESC = "Cor da classe, sua zona em verde"
 	L.CLASSCOLORS_TOOLTIP = "Mostra o nome do personagem dos seus amigos online na cor da classe.\n\nAmigos na sua zona têm a zona em verde."
 	L.LEVELS_PANEL = "Nível"
-	L.LEVELS_DESC = "Nível e versão do WoW abaixo do nome"
 	L.LEVELS_TOOLTIP = "Mostra o nível do personagem abaixo do nome dos seus amigos online, depois da zona.\n\nAmigos em outra versão do WoW mostram qual, ex.: \"Nv. 80 · Retail\"."
+	L.SMARTSORT_PANEL = "Ordenação inteligente"
+	L.SMARTSORT_TOOLTIP = "Os amigos online são ordenados por quem você pode convidar:\n\n1. Mesma versão do WoW, facção e tipo de reino\n2. Mesma versão do WoW, outra facção ou tipo de reino\n3. Outras versões do WoW e outros jogos\n\nAmigos offline ficam no fim."
+	L.SMARTSORT_TIP = "Novo: a ordenação inteligente coloca no topo os amigos que você pode convidar. Experimente nas opções!"
+	L.NEW_BADGE = "NOVO"
 
 	L.SEARCH_PANEL = "Campo de busca"
-	L.SEARCH_DESC = "Busca por BattleTag, nome, classe, zona"
 	L.SEARCH_TOOLTIP = "Um campo de busca acima da lista. Busca em BattleTag, nome do personagem, classe, raça, zona e reino."
 
 	L.REQUIRES = "Requer \"%s\" ativado."
@@ -520,10 +515,10 @@ if locale == "ptBR" then
 	L.RELOAD_LATER = "Mais tarde"
 
 	L.GITHUB_TITLE = "Bugs e sugestões"
-	L.GITHUB_LINK = "Relatar um bug ou sugerir uma ideia"
 	L.GITHUB_TOOLTIP = "Encontrou um bug ou tem uma ideia para melhorar o addon? Clique para obter o link da página no GitHub."
 	L.GITHUB_COPY = "Pressione Ctrl+C para copiar o link e cole-o no navegador."
 	L.GITHUB_COPIED = "Copiado!"
+	L.CURSEFORGE_TOOLTIP = "Gostou do addon? Uma avaliação ou um comentário no CurseForge ajuda outros jogadores a encontrá-lo. Clique para obter o link."
 end
 
 -- Russian -----------------------------------------------------------------------------------
@@ -560,39 +555,38 @@ if locale == "ruRU" then
 	L.OTHER_RULESET_INVITE = "Игровой мир %s: нельзя собрать группу с этим другом."
 
 	L.SECTION_GENERAL = "Общие"
+	L.SECTION_WINDOW = "Окно"
 	L.SECTION_LIST = "Список друзей"
 
 	L.ENABLED_PANEL = "Классическое окно друзей"
-	L.ENABLED_DESC = "Заменяет новое окно Forever"
 	L.ENABLED_TOOLTIP = "Открывает классический список друзей вместо нового социального окна Forever.\n\nВыключите, чтобы вернуть окно Forever, не отключая аддон."
 
 	L.CHATBUTTON_PANEL = "Кнопка друзей у чата"
-	L.CHATBUTTON_DESC = "Кнопка у чата тоже открывает его"
 	L.CHATBUTTON_TOOLTIP = "Кнопка друзей рядом с чатом открывает классическое окно.\n\nУведомления о быстром присоединении на этой кнопке по-прежнему открывают список Forever."
 
 	L.BOTTOMTABS_PANEL = "Классические нижние вкладки"
-	L.BOTTOMTABS_DESC = "Друзья, Кто, Гильдия, Рейд внизу"
 	L.BOTTOMTABS_TOOLTIP = "Вкладки Classic Era под окном. Кто, Гильдия и Рейд открывают собственные окна."
 	L.WINDOWSCALE_PANEL = "Размер окна"
 	L.WINDOWSCALE_TOOLTIP = "Увеличивает или уменьшает окно друзей. 100% — обычный размер."
+	L.WINDOWHEIGHT_PANEL = "Высота окна"
+	L.WINDOWHEIGHT_TOOLTIP = "Делает окно друзей выше, чтобы видеть больше друзей сразу. 100% — обычная высота."
 
 	L.MINIMAPBUTTON_PANEL = "Кнопка у миникарты"
-	L.MINIMAPBUTTON_DESC = "Открывает настройки и список друзей"
 	L.MINIMAPBUTTON_TOOLTIP = "Кнопка на краю миникарты.\n\nЛКМ открывает эти настройки, ПКМ — список друзей. Перетащите, чтобы переместить её вокруг миникарты."
 
 	L.FACTIONCOLORS_PANEL = "Цвета фракций"
-	L.FACTIONCOLORS_DESC = "Красный — Орда, синий — Альянс"
 	L.FACTIONCOLORS_TOOLTIP = "Окрашивает строки друзей, играющих в Forever: красный для Орды, синий для Альянса.\n\nДрузья в другой версии WoW (Retail, Classic...) остаются с обычной строкой, так как играть с ними нельзя."
 
 	L.CLASSCOLORS_PANEL = "Цвета классов"
-	L.CLASSCOLORS_DESC = "Цвет класса, зона зелёным"
 	L.CLASSCOLORS_TOOLTIP = "Показывает имена персонажей друзей в сети цветом их класса.\n\nУ друзей в вашей зоне зона показана зелёным."
 	L.LEVELS_PANEL = "Уровень"
-	L.LEVELS_DESC = "Уровень и версия WoW под именем"
 	L.LEVELS_TOOLTIP = "Показывает уровень персонажа под именем друзей в сети, после их зоны.\n\nДрузья в другой версии WoW показывают, в какой, например \"Ур. 80 · Retail\"."
+	L.SMARTSORT_PANEL = "Умная сортировка"
+	L.SMARTSORT_TOOLTIP = "Друзья в сети сортируются по тому, кого можно пригласить:\n\n1. Та же версия WoW, фракция и тип мира\n2. Та же версия WoW, другая фракция или тип мира\n3. Другие версии WoW и другие игры\n\nДрузья не в сети остаются внизу."
+	L.SMARTSORT_TIP = "Новое: умная сортировка показывает сверху друзей, которых можно пригласить. Попробуйте в настройках!"
+	L.NEW_BADGE = "НОВОЕ"
 
 	L.SEARCH_PANEL = "Поле поиска"
-	L.SEARCH_DESC = "Поиск по BattleTag, имени, классу, зоне"
 	L.SEARCH_TOOLTIP = "Поле поиска над списком. Ищет по BattleTag, имени персонажа, классу, расе, зоне и игровому миру."
 
 	L.REQUIRES = "Требуется включить \"%s\"."
@@ -601,10 +595,10 @@ if locale == "ruRU" then
 	L.RELOAD_LATER = "Позже"
 
 	L.GITHUB_TITLE = "Ошибки и предложения"
-	L.GITHUB_LINK = "Сообщить об ошибке или предложить идею"
 	L.GITHUB_TOOLTIP = "Нашли ошибку или есть идея, как улучшить аддон? Нажмите, чтобы получить ссылку на его страницу GitHub."
 	L.GITHUB_COPY = "Нажмите Ctrl+C, чтобы скопировать ссылку, затем вставьте её в браузер."
 	L.GITHUB_COPIED = "Скопировано!"
+	L.CURSEFORGE_TOOLTIP = "Нравится аддон? Оценка или комментарий на CurseForge помогают другим игрокам найти его. Нажмите, чтобы получить ссылку."
 end
 
 -- Korean ------------------------------------------------------------------------------------
@@ -641,39 +635,38 @@ if locale == "koKR" then
 	L.OTHER_RULESET_INVITE = "%s 서버: 이 친구와 파티를 맺을 수 없습니다."
 
 	L.SECTION_GENERAL = "일반"
+	L.SECTION_WINDOW = "창"
 	L.SECTION_LIST = "친구 목록"
 
 	L.ENABLED_PANEL = "클래식 친구 창"
-	L.ENABLED_DESC = "Forever의 새 소셜 창을 대체"
 	L.ENABLED_TOOLTIP = "Forever의 새 소셜 창 대신 클래식 친구 목록을 엽니다.\n\n애드온을 끄지 않고 Forever 창으로 돌아가려면 해제하세요."
 
 	L.CHATBUTTON_PANEL = "채팅 친구 버튼"
-	L.CHATBUTTON_DESC = "채팅 옆 버튼으로도 열기"
 	L.CHATBUTTON_TOOLTIP = "채팅창 옆의 친구 버튼이 클래식 창을 엽니다.\n\n이 버튼의 빠른 참여 알림은 계속 Forever 목록을 엽니다."
 
 	L.BOTTOMTABS_PANEL = "클래식 하단 탭"
-	L.BOTTOMTABS_DESC = "목록 아래 친구, 누구, 길드, 공격대"
 	L.BOTTOMTABS_TOOLTIP = "창 아래의 Classic Era 탭입니다. 누구, 길드, 공격대는 각자의 창을 엽니다."
 	L.WINDOWSCALE_PANEL = "창 크기"
 	L.WINDOWSCALE_TOOLTIP = "친구 창을 크게 또는 작게 만듭니다. 100%가 기본 크기입니다."
+	L.WINDOWHEIGHT_PANEL = "창 높이"
+	L.WINDOWHEIGHT_TOOLTIP = "친구 창을 길게 늘려 더 많은 친구를 한 번에 봅니다. 100%가 기본 높이입니다."
 
 	L.MINIMAPBUTTON_PANEL = "미니맵 버튼"
-	L.MINIMAPBUTTON_DESC = "설정과 친구 목록 열기"
 	L.MINIMAPBUTTON_TOOLTIP = "미니맵 가장자리의 버튼입니다.\n\n왼쪽 클릭은 이 설정을, 오른쪽 클릭은 친구 목록을 엽니다. 드래그하여 미니맵 주위로 옮길 수 있습니다."
 
 	L.FACTIONCOLORS_PANEL = "진영 색상"
-	L.FACTIONCOLORS_DESC = "호드는 빨강, 얼라이언스는 파랑"
 	L.FACTIONCOLORS_TOOLTIP = "Forever를 플레이 중인 친구의 줄을 호드는 빨강, 얼라이언스는 파랑으로 칠합니다.\n\n다른 WoW 버전(Retail, Classic...)의 친구는 함께 플레이할 수 없으므로 기본 줄을 유지합니다."
 
 	L.CLASSCOLORS_PANEL = "직업 색상"
-	L.CLASSCOLORS_DESC = "직업 색상, 내 지역은 녹색"
 	L.CLASSCOLORS_TOOLTIP = "접속 중인 친구의 캐릭터 이름을 직업 색상으로 표시합니다.\n\n내 지역에 있는 친구는 지역이 녹색으로 표시됩니다."
 	L.LEVELS_PANEL = "레벨"
-	L.LEVELS_DESC = "이름 아래에 레벨과 WoW 버전"
 	L.LEVELS_TOOLTIP = "접속 중인 친구의 이름 아래, 지역 뒤에 캐릭터 레벨을 표시합니다.\n\n다른 WoW 버전의 친구는 버전도 표시합니다. 예: \"80레벨 · Retail\"."
+	L.SMARTSORT_PANEL = "스마트 정렬"
+	L.SMARTSORT_TOOLTIP = "접속 중인 친구를 초대 가능 여부에 따라 정렬합니다:\n\n1. 같은 WoW 버전, 진영, 서버 유형\n2. 같은 WoW 버전, 다른 진영 또는 서버 유형\n3. 다른 WoW 버전 및 다른 게임\n\n오프라인 친구는 맨 아래에 남습니다."
+	L.SMARTSORT_TIP = "신규: 스마트 정렬로 초대 가능한 친구를 맨 위에 표시합니다. 설정에서 사용해 보세요!"
+	L.NEW_BADGE = "신규"
 
 	L.SEARCH_PANEL = "검색창"
-	L.SEARCH_DESC = "배틀태그, 이름, 직업, 지역으로 검색"
 	L.SEARCH_TOOLTIP = "목록 위의 검색창입니다. 배틀태그, 캐릭터 이름, 직업, 종족, 지역, 서버를 검색합니다."
 
 	L.REQUIRES = "\"%s\" 설정이 필요합니다."
@@ -682,10 +675,10 @@ if locale == "koKR" then
 	L.RELOAD_LATER = "나중에"
 
 	L.GITHUB_TITLE = "버그 및 제안"
-	L.GITHUB_LINK = "버그 신고 또는 아이디어 제안"
 	L.GITHUB_TOOLTIP = "버그를 발견했거나 애드온 개선 아이디어가 있나요? 클릭하면 GitHub 페이지 링크가 나타납니다."
 	L.GITHUB_COPY = "Ctrl+C를 눌러 링크를 복사한 뒤 브라우저에 붙여 넣으세요."
 	L.GITHUB_COPIED = "복사했습니다!"
+	L.CURSEFORGE_TOOLTIP = "애드온이 마음에 드시나요? CurseForge에 평가나 댓글을 남기면 다른 플레이어가 찾는 데 도움이 됩니다. 클릭하면 링크를 받을 수 있습니다."
 end
 
 -- Simplified Chinese ------------------------------------------------------------------------
@@ -722,39 +715,38 @@ if locale == "zhCN" then
 	L.OTHER_RULESET_INVITE = "%s服务器：无法与该好友组队。"
 
 	L.SECTION_GENERAL = "常规"
+	L.SECTION_WINDOW = "窗口"
 	L.SECTION_LIST = "好友列表"
 
 	L.ENABLED_PANEL = "经典好友窗口"
-	L.ENABLED_DESC = "替换 Forever 的新社交窗口"
 	L.ENABLED_TOOLTIP = "打开经典好友列表，而不是 Forever 的新社交窗口。\n\n关闭此项可恢复 Forever 的窗口，而无需禁用插件。"
 
 	L.CHATBUTTON_PANEL = "聊天好友按钮"
-	L.CHATBUTTON_DESC = "聊天旁的按钮也能打开"
 	L.CHATBUTTON_TOOLTIP = "聊天框旁的好友按钮会打开经典窗口。\n\n该按钮上的快速加入提示仍会打开 Forever 的列表。"
 
 	L.BOTTOMTABS_PANEL = "经典底部标签"
-	L.BOTTOMTABS_DESC = "列表下方的好友、查询、公会、团队"
 	L.BOTTOMTABS_TOOLTIP = "窗口下方的经典时代标签。查询、公会和团队会打开各自的窗口。"
 	L.WINDOWSCALE_PANEL = "窗口大小"
 	L.WINDOWSCALE_TOOLTIP = "放大或缩小好友窗口。100% 为默认大小。"
+	L.WINDOWHEIGHT_PANEL = "窗口高度"
+	L.WINDOWHEIGHT_TOOLTIP = "加高好友窗口，一次显示更多好友。100% 为默认高度。"
 
 	L.MINIMAPBUTTON_PANEL = "小地图按钮"
-	L.MINIMAPBUTTON_DESC = "打开设置和好友列表"
 	L.MINIMAPBUTTON_TOOLTIP = "小地图边缘的按钮。\n\n左键打开这些设置，右键打开好友列表。拖动可沿小地图移动。"
 
 	L.FACTIONCOLORS_PANEL = "阵营颜色"
-	L.FACTIONCOLORS_DESC = "部落为红色，联盟为蓝色"
 	L.FACTIONCOLORS_TOOLTIP = "为正在玩 Forever 的好友的行着色：部落为红色，联盟为蓝色。\n\n其他 WoW 版本（Retail、Classic……）的好友保持普通行，因为你无法与他们一起游戏。"
 
 	L.CLASSCOLORS_PANEL = "职业颜色"
-	L.CLASSCOLORS_DESC = "职业颜色、同区域显示绿色"
 	L.CLASSCOLORS_TOOLTIP = "以职业颜色显示在线好友的角色名。\n\n与你在同一区域的好友，其区域显示为绿色。"
 	L.LEVELS_PANEL = "等级"
-	L.LEVELS_DESC = "在名字下方显示等级和 WoW 版本"
 	L.LEVELS_TOOLTIP = "好友在线时，在其名字下方、区域之后显示角色等级。\n\n其他 WoW 版本的好友会显示所在版本，例如“80级 · Retail”。"
+	L.SMARTSORT_PANEL = "智能排序"
+	L.SMARTSORT_TOOLTIP = "在线好友按可否邀请排序：\n\n1. 同一 WoW 版本、阵营和服务器类型\n2. 同一 WoW 版本，但阵营或服务器类型不同\n3. 其他 WoW 版本和其他游戏\n\n离线好友保持在最下方。"
+	L.SMARTSORT_TIP = "新功能：智能排序会把可邀请的好友排在最前。去设置里试试吧！"
+	L.NEW_BADGE = "新"
 
 	L.SEARCH_PANEL = "搜索框"
-	L.SEARCH_DESC = "按战网昵称、名字、职业、区域搜索"
 	L.SEARCH_TOOLTIP = "列表上方的搜索框。可搜索战网昵称、角色名、职业、种族、区域和服务器。"
 
 	L.REQUIRES = "需要开启“%s”。"
@@ -763,10 +755,10 @@ if locale == "zhCN" then
 	L.RELOAD_LATER = "稍后"
 
 	L.GITHUB_TITLE = "问题与建议"
-	L.GITHUB_LINK = "报告问题或提出建议"
 	L.GITHUB_TOOLTIP = "发现问题或有改进插件的想法？点击获取其 GitHub 页面的链接。"
 	L.GITHUB_COPY = "按 Ctrl+C 复制链接，然后粘贴到浏览器中。"
 	L.GITHUB_COPIED = "已复制！"
+	L.CURSEFORGE_TOOLTIP = "喜欢这个插件吗？在 CurseForge 上评分或评论可以帮助其他玩家发现它。点击获取链接。"
 end
 
 -- Traditional Chinese -----------------------------------------------------------------------
@@ -803,39 +795,38 @@ if locale == "zhTW" then
 	L.OTHER_RULESET_INVITE = "%s伺服器：無法與該好友組隊。"
 
 	L.SECTION_GENERAL = "一般"
+	L.SECTION_WINDOW = "視窗"
 	L.SECTION_LIST = "好友名單"
 
 	L.ENABLED_PANEL = "經典好友視窗"
-	L.ENABLED_DESC = "取代 Forever 的新社交視窗"
 	L.ENABLED_TOOLTIP = "開啟經典好友名單，而不是 Forever 的新社交視窗。\n\n關閉此項可恢復 Forever 的視窗，而不需停用插件。"
 
 	L.CHATBUTTON_PANEL = "聊天好友按鈕"
-	L.CHATBUTTON_DESC = "聊天旁的按鈕也能開啟"
 	L.CHATBUTTON_TOOLTIP = "聊天框旁的好友按鈕會開啟經典視窗。\n\n該按鈕上的快速加入提示仍會開啟 Forever 的名單。"
 
 	L.BOTTOMTABS_PANEL = "經典底部標籤"
-	L.BOTTOMTABS_DESC = "名單下方的好友、搜尋、公會、團隊"
 	L.BOTTOMTABS_TOOLTIP = "視窗下方的經典時代標籤。搜尋、公會與團隊會開啟各自的視窗。"
 	L.WINDOWSCALE_PANEL = "視窗大小"
 	L.WINDOWSCALE_TOOLTIP = "放大或縮小好友視窗。100% 為預設大小。"
+	L.WINDOWHEIGHT_PANEL = "視窗高度"
+	L.WINDOWHEIGHT_TOOLTIP = "加高好友視窗，一次顯示更多好友。100% 為預設高度。"
 
 	L.MINIMAPBUTTON_PANEL = "小地圖按鈕"
-	L.MINIMAPBUTTON_DESC = "開啟設定和好友名單"
 	L.MINIMAPBUTTON_TOOLTIP = "小地圖邊緣的按鈕。\n\n左鍵開啟這些設定，右鍵開啟好友名單。拖曳可沿小地圖移動。"
 
 	L.FACTIONCOLORS_PANEL = "陣營顏色"
-	L.FACTIONCOLORS_DESC = "部落為紅色，聯盟為藍色"
 	L.FACTIONCOLORS_TOOLTIP = "為正在玩 Forever 的好友的列著色：部落為紅色，聯盟為藍色。\n\n其他 WoW 版本（Retail、Classic……）的好友維持一般的列，因為你無法與他們一起遊戲。"
 
 	L.CLASSCOLORS_PANEL = "職業顏色"
-	L.CLASSCOLORS_DESC = "職業顏色、同區域顯示綠色"
 	L.CLASSCOLORS_TOOLTIP = "以職業顏色顯示上線好友的角色名稱。\n\n與你在同一區域的好友，其區域會顯示為綠色。"
 	L.LEVELS_PANEL = "等級"
-	L.LEVELS_DESC = "在名稱下方顯示等級和 WoW 版本"
 	L.LEVELS_TOOLTIP = "好友上線時，在其名稱下方、區域之後顯示角色等級。\n\n其他 WoW 版本的好友會顯示所在版本，例如「80級 · Retail」。"
+	L.SMARTSORT_PANEL = "智慧排序"
+	L.SMARTSORT_TOOLTIP = "上線好友依可否邀請排序：\n\n1. 同一 WoW 版本、陣營和伺服器類型\n2. 同一 WoW 版本，但陣營或伺服器類型不同\n3. 其他 WoW 版本和其他遊戲\n\n離線好友保持在最下方。"
+	L.SMARTSORT_TIP = "新功能：智慧排序會把可邀請的好友排在最前。到設定裡試試吧！"
+	L.NEW_BADGE = "新"
 
 	L.SEARCH_PANEL = "搜尋框"
-	L.SEARCH_DESC = "依 BattleTag、名字、職業、區域搜尋"
 	L.SEARCH_TOOLTIP = "名單上方的搜尋框。可搜尋 BattleTag、角色名稱、職業、種族、區域與伺服器。"
 
 	L.REQUIRES = "需要開啟「%s」。"
@@ -844,8 +835,8 @@ if locale == "zhTW" then
 	L.RELOAD_LATER = "稍後"
 
 	L.GITHUB_TITLE = "問題與建議"
-	L.GITHUB_LINK = "回報問題或提出建議"
 	L.GITHUB_TOOLTIP = "發現問題或有改進插件的想法？點擊取得其 GitHub 頁面的連結。"
 	L.GITHUB_COPY = "按 Ctrl+C 複製連結，然後貼到瀏覽器中。"
 	L.GITHUB_COPIED = "已複製！"
+	L.CURSEFORGE_TOOLTIP = "喜歡這個插件嗎？在 CurseForge 上評分或留言能幫助其他玩家找到它。點擊取得連結。"
 end

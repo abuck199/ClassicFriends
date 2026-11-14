@@ -1,11 +1,19 @@
 local _, addon = ...
 local L = addon.L
 
-local FACTION_COLORS = {
-	Horde = { 0.80, 0.12, 0.12 },
-	Alliance = { 0.15, 0.40, 0.95 },
-}
 local FACTION_TINT_ALPHA_LEFT, FACTION_TINT_ALPHA_RIGHT = 0.30, 0.03
+
+local function CreateFactionGradient(r, g, b)
+	return {
+		left = CreateColor(r, g, b, FACTION_TINT_ALPHA_LEFT),
+		right = CreateColor(r, g, b, FACTION_TINT_ALPHA_RIGHT),
+	}
+end
+
+local FACTION_GRADIENTS = {
+	Horde = CreateFactionGradient(0.80, 0.12, 0.12),
+	Alliance = CreateFactionGradient(0.15, 0.40, 0.95),
+}
 local DETAILS_COLOR_CODE = "|cffb4b4b4"
 local ZONE_TEXT_COLOR = FRIENDS_GRAY_COLOR
 local SAME_ZONE_TEXT_COLOR = GREEN_FONT_COLOR
@@ -28,6 +36,7 @@ local RULESET_NAMES = {
 }
 
 local friendWasClicked = false
+local playerRuleset
 
 local function GetClassColorCode(classFile)
 	if not classFile or issecretvalue(classFile) then
@@ -55,10 +64,13 @@ end
 
 local function GetOtherRulesetName(gameInfo)
 	local friendRuleset = GetRuleset(gameInfo.realmName)
-	local playerRuleset = GetRuleset(GetRealmName())
 	if friendRuleset and playerRuleset and friendRuleset ~= playerRuleset then
 		return RULESET_NAMES[friendRuleset] or friendRuleset
 	end
+end
+
+function addon.IsOnPlayerRuleset(gameInfo)
+	return GetOtherRulesetName(gameInfo) == nil
 end
 
 local function GetLevelText(level)
@@ -111,9 +123,9 @@ local function IsInPlayerZone(zoneName)
 end
 
 local function TintRowForFaction(row, faction)
-	local r, g, b = unpack(FACTION_COLORS[faction])
+	local gradient = FACTION_GRADIENTS[faction]
 	row.background:SetColorTexture(1, 1, 1, 1)
-	row.background:SetGradient("HORIZONTAL", CreateColor(r, g, b, FACTION_TINT_ALPHA_LEFT), CreateColor(r, g, b, FACTION_TINT_ALPHA_RIGHT))
+	row.background:SetGradient("HORIZONTAL", gradient.left, gradient.right)
 end
 
 -- Selection ---------------------------------------------------------------------------------
@@ -159,6 +171,12 @@ local function InviteButton_OnEnter(inviteButton)
 	end
 end
 
+local function UseDefaultInviteButton(inviteButton)
+	inviteButton.NormalTexture:SetAtlas("friendslist-invitebutton-default-normal")
+	inviteButton.PushedTexture:SetAtlas("friendslist-invitebutton-default-pressed")
+	inviteButton.DisabledTexture:SetAtlas("friendslist-invitebutton-default-disabled")
+end
+
 local function StyleFriendRow(_, row, friendData)
 	if not friendData or not addon.IsFriend(friendData) then
 		return
@@ -178,6 +196,7 @@ local function StyleFriendRow(_, row, friendData)
 	if not friendWasClicked then
 		row:UnlockHighlight()
 	end
+	UseDefaultInviteButton(row.travelPassButton)
 
 	local settings = addon.settings
 	local nameText, faction, zoneName, rulesetName
@@ -227,7 +246,7 @@ local function StyleFriendRow(_, row, friendData)
 	if settings.classColors and isInSameGame and IsInPlayerZone(zoneName) then
 		row.info:SetTextColor(SAME_ZONE_TEXT_COLOR:GetRGB())
 	end
-	if settings.factionColors and isInSameGame and faction and not issecretvalue(faction) and FACTION_COLORS[faction] then
+	if settings.factionColors and isInSameGame and faction and not issecretvalue(faction) and FACTION_GRADIENTS[faction] then
 		TintRowForFaction(row, faction)
 	end
 
@@ -244,6 +263,7 @@ local function RefreshFriendRows()
 end
 
 function addon.SetUpFriendRows()
+	playerRuleset = GetRuleset(GetRealmName())
 	ScrollUtil.AddInitializedFrameCallback(FriendsListFrame.ScrollBox, StyleFriendRow, StyleFriendRow)
 
 	hooksecurefunc("FriendsFrame_SelectFriend", HideAutomaticSelection)

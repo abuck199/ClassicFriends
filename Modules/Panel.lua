@@ -1,149 +1,86 @@
 local _, addon = ...
 local L = addon.L
 
-local WHITE_TEXTURE = "Interface\\Buttons\\WHITE8x8"
-local CIRCLE_MASK = "Interface\\CharacterFrame\\TempPortraitAlphaMask"
-local GITHUB_LOGO = "Interface\\AddOns\\ClassicFriends\\Media\\GitHub"
-local ISSUES_URL = "https://github.com/abuck199/ClassicFriends/issues"
+local LINKS = {
+	{
+		logo = "Interface\\AddOns\\ClassicFriends\\Media\\GitHub",
+		url = "https://github.com/abuck199/ClassicFriends/issues",
+		label = "GitHub",
+		title = L.GITHUB_TITLE,
+		tooltip = L.GITHUB_TOOLTIP,
+	},
+	{
+		logo = "Interface\\AddOns\\ClassicFriends\\Media\\CurseForge",
+		logoColor = { 0.945, 0.392, 0.212 },
+		logoHoverColor = { 1, 0.55, 0.38 },
+		url = "https://www.curseforge.com/wow/addons/classic-friends",
+		label = "CurseForge",
+		title = L.CURSEFORGE_TITLE,
+		tooltip = L.CURSEFORGE_TOOLTIP,
+	},
+}
+local CHECKBOX_ART = "Interface\\Buttons\\UI-CheckBox-"
+local CLOSE_BUTTON_ART = "Interface\\Buttons\\UI-Panel-MinimizeButton-"
 
-local PANEL_WIDTH = 330
-local PADDING = 16
-local ROW_INSET = 8
-local ROW_HEIGHT = 42
-local SECTION_GAP = 10
+local DRAWER_WIDTH = 300
+local DRAWER_OFFSET_Y = 0
+local PADDING = 20
+local CHECK_ROW_HEIGHT = 22
+local SLIDER_ROW_HEIGHT = 38
+local SECTION_GAP = 8
 local SECTION_TITLE_HEIGHT = 18
-local SWITCH_WIDTH, SWITCH_HEIGHT, KNOB_SIZE = 34, 18, 14
-local SLIDER_TRACK_HEIGHT, SLIDER_THUMB_SIZE = 4, 14
-local DISABLED_TEXT_ALPHA = 0.4
+local CHECKBOX_SIZE = 24
+local SLIDER_THUMB_INSET = 8
+local SETTINGS_BUTTON_SCALE = 0.8
 
-local COLORS = {
-	background = { 0.05, 0.05, 0.06, 0.96 },
-	border = { 1, 1, 1, 0.10 },
-	accent = { 0.345, 0.667, 0.867 },
-	sectionTitle = { 1, 0.82, 0 },
-	divider = { 1, 1, 1, 0.08 },
-	hover = { 1, 1, 1, 0.045 },
-	trackOff = { 0.24, 0.24, 0.27 },
-	knobOff = { 0.68, 0.68, 0.72 },
-	knobOn = { 1, 1, 1 },
+local DIALOG_BACKDROP = {
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+	edgeFile = "Interface\\DialogFrame\\UI-DialogBox-Border",
+	tile = true,
+	tileSize = 32,
+	edgeSize = 32,
+	insets = { left = 11, right = 12, top = 12, bottom = 11 },
 }
 
-local panel
+local SLIDER_BACKDROP = {
+	bgFile = "Interface\\Buttons\\UI-SliderBar-Background",
+	edgeFile = "Interface\\Buttons\\UI-SliderBar-Border",
+	tile = true,
+	tileSize = 8,
+	edgeSize = 8,
+	insets = { left = 3, right = 3, top = 6, bottom = 6 },
+}
+
+local LINK_WINDOW_BACKDROP = {
+	bgFile = "Interface\\DialogFrame\\UI-DialogBox-Background-Dark",
+	edgeFile = "Interface\\Tooltips\\UI-Tooltip-Border",
+	tile = true,
+	tileSize = 16,
+	edgeSize = 16,
+	insets = { left = 4, right = 4, top = 4, bottom = 4 },
+}
+
+local drawer, settingsButton
+local isDrawerDocked, isDrawerOnRight = false, false
 local optionRows = {}
 
-local function CreateSolidTexture(parent, layer, color)
-	local texture = parent:CreateTexture(nil, layer)
-	texture:SetTexture(WHITE_TEXTURE)
-	texture:SetVertexColor(color[1], color[2], color[3], color[4] or 1)
-	return texture
+local function SkinClassicCloseButton(closeButton)
+	closeButton:SetNormalTexture(CLOSE_BUTTON_ART .. "Up")
+	closeButton:SetPushedTexture(CLOSE_BUTTON_ART .. "Down")
+	closeButton:SetHighlightTexture(CLOSE_BUTTON_ART .. "Highlight", "ADD")
+	closeButton:SetSize(32, 32)
 end
 
-local function CreateCircleTexture(parent, layer, size)
-	local texture = parent:CreateTexture(nil, layer)
-	texture:SetTexture(WHITE_TEXTURE)
-	texture:SetSize(size, size)
-	local circleMask = parent:CreateMaskTexture()
-	circleMask:SetTexture(CIRCLE_MASK, "CLAMPTOBLACKADDITIVE", "CLAMPTOBLACKADDITIVE")
-	circleMask:SetAllPoints(texture)
-	texture:AddMaskTexture(circleMask)
-	return texture
-end
-
-local function ToUppercase(text)
-	text = text:upper()
-	text = text:gsub("\195([\160-\190])", function(secondByte)
-		if secondByte == "\183" then
-			return "\195" .. secondByte
-		end
-		return "\195" .. string.char(secondByte:byte() - 32)
-	end)
-	text = text:gsub("\208([\176-\191])", function(secondByte)
-		return "\208" .. string.char(secondByte:byte() - 32)
-	end)
-	text = text:gsub("\209([\128-\143])", function(secondByte)
-		return "\208" .. string.char(secondByte:byte() + 32)
-	end)
-	return (text:gsub("\209\145", "\208\129"))
-end
-
-local function Interpolate(fromValue, toValue, progress)
-	return fromValue + (toValue - fromValue) * progress
-end
-
--- Switches ----------------------------------------------------------------------------------
-
-local KNOB_LEFT_X = SWITCH_HEIGHT / 2
-local KNOB_RIGHT_X = SWITCH_WIDTH - SWITCH_HEIGHT / 2
-local DIMMED_BLEND = 0.6
-
-local function GetControlColor(red, green, blue, isDimmed)
-	if isDimmed then
-		local background = COLORS.background
-		return Interpolate(red, background[1], DIMMED_BLEND), Interpolate(green, background[2], DIMMED_BLEND), Interpolate(blue, background[3], DIMMED_BLEND)
+local function ShowNewBadge(row)
+	if row.newBadge then
+		row.newBadge:SetShown(not addon.settings[row.option.key .. "Tried"])
 	end
-	return red, green, blue
 end
 
-local function DrawSwitch(switch)
-	local progress = switch.position
-	switch.knob:SetPoint("CENTER", switch, "LEFT", Interpolate(KNOB_LEFT_X, KNOB_RIGHT_X, progress), 0)
-
-	local trackRed, trackGreen, trackBlue = GetControlColor(
-		Interpolate(COLORS.trackOff[1], COLORS.accent[1], progress),
-		Interpolate(COLORS.trackOff[2], COLORS.accent[2], progress),
-		Interpolate(COLORS.trackOff[3], COLORS.accent[3], progress),
-		switch.isDimmed)
-	for _, trackPiece in ipairs(switch.trackPieces) do
-		trackPiece:SetVertexColor(trackRed, trackGreen, trackBlue, 1)
+local function MarkOptionTried(option)
+	if option.isNew then
+		addon.settings[option.key .. "Tried"] = true
 	end
-
-	switch.knob:SetVertexColor(GetControlColor(
-		Interpolate(COLORS.knobOff[1], COLORS.knobOn[1], progress),
-		Interpolate(COLORS.knobOff[2], COLORS.knobOn[2], progress),
-		Interpolate(COLORS.knobOff[3], COLORS.knobOn[3], progress),
-		switch.isDimmed))
-end
-
-local function Switch_OnUpdate(switch, elapsed)
-	local remaining = switch.targetPosition - switch.position
-	if math.abs(remaining) < 0.01 then
-		switch.position = switch.targetPosition
-		switch:SetScript("OnUpdate", nil)
-	else
-		switch.position = switch.position + remaining * math.min(1, elapsed * 16)
-	end
-	DrawSwitch(switch)
-end
-
-local function SetSwitchState(switch, isOn, skipAnimation)
-	switch.targetPosition = isOn and 1 or 0
-	if skipAnimation then
-		switch.position = switch.targetPosition
-		switch:SetScript("OnUpdate", nil)
-	elseif switch.position ~= switch.targetPosition then
-		switch:SetScript("OnUpdate", Switch_OnUpdate)
-	end
-	DrawSwitch(switch)
-end
-
-local function CreateSwitch(parent)
-	local switch = CreateFrame("Frame", nil, parent)
-	switch:SetSize(SWITCH_WIDTH, SWITCH_HEIGHT)
-
-	local leftEnd = CreateCircleTexture(switch, "BACKGROUND", SWITCH_HEIGHT)
-	leftEnd:SetPoint("LEFT")
-	local rightEnd = CreateCircleTexture(switch, "BACKGROUND", SWITCH_HEIGHT)
-	rightEnd:SetPoint("RIGHT")
-	local middle = switch:CreateTexture(nil, "BACKGROUND")
-	middle:SetTexture(WHITE_TEXTURE)
-	middle:SetPoint("TOPLEFT", leftEnd, "TOP")
-	middle:SetPoint("BOTTOMRIGHT", rightEnd, "BOTTOM")
-	switch.trackPieces = { leftEnd, rightEnd, middle }
-
-	switch.knob = CreateCircleTexture(switch, "ARTWORK", KNOB_SIZE)
-	switch.position, switch.targetPosition = 0, 0
-	DrawSwitch(switch)
-	return switch
 end
 
 -- Option rows -------------------------------------------------------------------------------
@@ -159,92 +96,88 @@ local function IsOptionAvailable(option)
 	return true
 end
 
-local function OptionRow_OnEnter(row)
-	if row.isAvailable then
-		row.hoverHighlight:Show()
-	end
+local function ShowOptionTooltip(owner, row)
 	local option = row.option
-	GameTooltip:SetOwner(row, "ANCHOR_RIGHT", 6, 0)
+	GameTooltip:SetOwner(owner, "ANCHOR_RIGHT")
 	GameTooltip:SetText(option.label, 1, 1, 1)
 	GameTooltip:AddLine(option.tooltip, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
 	if not row.isAvailable then
 		GameTooltip:AddLine(" ")
-		GameTooltip:AddLine(L.REQUIRES:format(addon.optionsByKey[option.requires].label), 1, 0.3, 0.3, true)
+		GameTooltip:AddLine(L.REQUIRES:format(addon.optionsByKey[option.requires].label), RED_FONT_COLOR.r, RED_FONT_COLOR.g, RED_FONT_COLOR.b, true)
 	end
 	GameTooltip:Show()
 end
 
-local function OptionRow_OnLeave(row)
-	row.hoverHighlight:Hide()
-	GameTooltip:Hide()
+local function CheckRow_OnEnter(row)
+	ShowOptionTooltip(row, row)
 end
 
-local function OptionRow_OnClick(row)
-	if not row.isAvailable then
-		return
+local function CheckRow_OnClick(row)
+	local isChecked = row:GetChecked()
+	PlaySound(isChecked and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
+	if isChecked then
+		MarkOptionTried(row.option)
 	end
-	local newValue = not addon.settings[row.option.key]
-	PlaySound(newValue and SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON or SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
-	addon.SetOption(row.option.key, newValue)
+	addon.SetOption(row.option.key, isChecked)
 end
 
-local function RefreshSwitchRow(row, skipAnimation)
-	local textAlpha = row.isAvailable and 1 or DISABLED_TEXT_ALPHA
-	row.label:SetAlpha(textAlpha)
-	row.description:SetAlpha(textAlpha)
-	row.switch.isDimmed = not row.isAvailable
-	SetSwitchState(row.switch, addon.settings[row.option.key], skipAnimation)
+local function RefreshCheckRow(row)
+	row:SetChecked(addon.settings[row.option.key])
+	row:SetEnabled(row.isAvailable)
+	row.label:SetFontObject(row.isAvailable and GameFontHighlight or GameFontDisable)
+	ShowNewBadge(row)
 end
 
-local function CreateRow(frameType, option, offsetY)
-	local row = CreateFrame(frameType, nil, panel)
-	row:SetPoint("TOPLEFT", ROW_INSET, offsetY)
-	row:SetPoint("TOPRIGHT", -ROW_INSET, offsetY)
-	row:SetHeight(ROW_HEIGHT)
+local function SetCheckboxTexture(texture)
+	texture:ClearAllPoints()
+	texture:SetPoint("LEFT")
+	texture:SetSize(CHECKBOX_SIZE, CHECKBOX_SIZE)
+end
+
+local function CreateNewBadge(row)
+	local badge = row:CreateFontString(nil, "ARTWORK", "GameFontGreenSmall")
+	badge:SetPoint("LEFT", row.label, "RIGHT", 6, 0)
+	badge:SetText(L.NEW_BADGE)
+	return badge
+end
+
+local function CreateCheckRow(option, offsetY)
+	local row = CreateFrame("CheckButton", nil, drawer)
+	row:SetPoint("TOPLEFT", PADDING, offsetY)
+	row:SetPoint("TOPRIGHT", -PADDING, offsetY)
+	row:SetHeight(CHECK_ROW_HEIGHT)
+	row:SetMotionScriptsWhileDisabled(true)
 	row.option = option
+	row.Refresh = RefreshCheckRow
 
-	row.hoverHighlight = CreateSolidTexture(row, "BACKGROUND", COLORS.hover)
-	row.hoverHighlight:SetAllPoints()
-	row.hoverHighlight:Hide()
+	row:SetNormalTexture(CHECKBOX_ART .. "Up")
+	row:SetPushedTexture(CHECKBOX_ART .. "Down")
+	row:SetHighlightTexture(CHECKBOX_ART .. "Highlight", "ADD")
+	row:SetCheckedTexture(CHECKBOX_ART .. "Check")
+	row:SetDisabledCheckedTexture(CHECKBOX_ART .. "Check-Disabled")
+	SetCheckboxTexture(row:GetNormalTexture())
+	SetCheckboxTexture(row:GetPushedTexture())
+	SetCheckboxTexture(row:GetHighlightTexture())
+	SetCheckboxTexture(row:GetCheckedTexture())
+	SetCheckboxTexture(row:GetDisabledCheckedTexture())
 
 	row.label = row:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
-	row.label:SetPoint("TOPLEFT", PADDING - ROW_INSET, -7)
-	row.label:SetJustifyH("LEFT")
+	row.label:SetPoint("LEFT", CHECKBOX_SIZE + 4, 0)
 	row.label:SetText(option.label)
+	if option.isNew then
+		row.newBadge = CreateNewBadge(row)
+	end
 
-	row:SetScript("OnEnter", OptionRow_OnEnter)
-	row:SetScript("OnLeave", OptionRow_OnLeave)
+	row:SetScript("OnClick", CheckRow_OnClick)
+	row:SetScript("OnEnter", CheckRow_OnEnter)
+	row:SetScript("OnLeave", GameTooltip_Hide)
 	table.insert(optionRows, row)
-	return row
-end
-
-local function CreateOptionRow(option, offsetY)
-	local row = CreateRow("Button", option, offsetY)
-	row.Refresh = RefreshSwitchRow
-
-	row.description = row:CreateFontString(nil, "ARTWORK", "GameFontDisableSmall")
-	row.description:SetPoint("TOPLEFT", row.label, "BOTTOMLEFT", 0, -4)
-	row.description:SetWidth(PANEL_WIDTH - PADDING * 2 - SWITCH_WIDTH - 12)
-	row.description:SetJustifyH("LEFT")
-	row.description:SetWordWrap(false)
-	row.description:SetText(option.description)
-
-	row.switch = CreateSwitch(row)
-	row.switch:SetPoint("RIGHT", -(PADDING - ROW_INSET), 0)
-
-	row:SetScript("OnClick", OptionRow_OnClick)
 end
 
 local function CreateSectionTitle(text, offsetY)
-	local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+	local title = drawer:CreateFontString(nil, "ARTWORK", "GameFontNormal")
 	title:SetPoint("TOPLEFT", PADDING, offsetY)
-	title:SetText(ToUppercase(text))
-	title:SetTextColor(COLORS.sectionTitle[1], COLORS.sectionTitle[2], COLORS.sectionTitle[3], 0.9)
-
-	local divider = CreateSolidTexture(panel, "ARTWORK", COLORS.divider)
-	divider:SetHeight(1)
-	divider:SetPoint("LEFT", title, "RIGHT", 8, 0)
-	divider:SetWidth(math.max(10, PANEL_WIDTH - PADDING * 2 - title:GetStringWidth() - 8))
+	title:SetText(text)
 end
 
 -- Sliders -----------------------------------------------------------------------------------
@@ -253,82 +186,125 @@ local function FormatPercent(value)
 	return ("%d%%"):format(math.floor(value * 100 + 0.5))
 end
 
-local function DrawSlider(row)
-	local isDimmed = not row.isAvailable
-	row.sliderTrack:SetVertexColor(GetControlColor(COLORS.trackOff[1], COLORS.trackOff[2], COLORS.trackOff[3], isDimmed))
-	row.sliderFill:SetVertexColor(GetControlColor(COLORS.accent[1], COLORS.accent[2], COLORS.accent[3], isDimmed))
-	row.sliderThumb:SetVertexColor(GetControlColor(COLORS.knobOn[1], COLORS.knobOn[2], COLORS.knobOn[3], isDimmed))
-	row.valueText:SetText(FormatPercent(row.slider:GetValue()))
+local function GetThumbTravel(row)
+	return row.track:GetWidth() - SLIDER_THUMB_INSET * 2
+end
+
+local function MoveThumb(row, value)
+	local option = row.option
+	local progress = (value - option.minimum) / (option.maximum - option.minimum)
+	row.thumb:ClearAllPoints()
+	row.thumb:SetPoint("CENTER", row.track, "LEFT", SLIDER_THUMB_INSET + progress * GetThumbTravel(row), 0)
+	row.valueText:SetText(FormatPercent(value))
 end
 
 local function RefreshSliderRow(row)
-	local textAlpha = row.isAvailable and 1 or DISABLED_TEXT_ALPHA
-	row.label:SetAlpha(textAlpha)
-	row.valueText:SetAlpha(textAlpha)
-	row.slider:SetEnabled(row.isAvailable)
-	row.slider:SetValue(addon.settings[row.option.key])
-	DrawSlider(row)
+	MoveThumb(row, addon.settings[row.option.key])
+	row.track:EnableMouse(row.isAvailable)
+	row.track:SetAlpha(row.isAvailable and 1 or 0.5)
+	row.label:SetFontObject(row.isAvailable and GameFontHighlight or GameFontDisable)
+	ShowNewBadge(row)
 end
 
-local function Slider_OnValueChanged(slider, value, isUserInput)
-	local row = slider:GetParent()
-	if isUserInput then
-		addon.SetOption(row.option.key, math.floor(value * 100 + 0.5) / 100)
+local function MovesDrawer(option)
+	return option.key == "windowScale" and isDrawerDocked and isDrawerOnRight
+end
+
+local function RoundToStep(option, value)
+	local steps = math.floor((value - option.minimum) / option.step + 0.5)
+	local rounded = math.max(option.minimum, math.min(option.maximum, option.minimum + steps * option.step))
+	return math.floor(rounded * 100 + 0.5) / 100
+end
+
+local function Track_OnUpdate(track)
+	if not IsMouseButtonDown("LeftButton") then
+		track:SetScript("OnUpdate", nil)
+		return
 	end
-	DrawSlider(row)
+	local row = track:GetParent()
+	local option = row.option
+	local cursorX = GetCursorPosition() / drawer:GetEffectiveScale()
+	local value = RoundToStep(option, (cursorX - row.dragOrigin) / row.dragSlope)
+	if value ~= addon.settings[option.key] then
+		MarkOptionTried(option)
+		addon.SetOption(option.key, value)
+	end
 end
 
-local function Slider_OnEnter(slider)
-	OptionRow_OnEnter(slider:GetParent())
+local function Track_OnMouseDown(track)
+	local row = track:GetParent()
+	local option = row.option
+	local slope = GetThumbTravel(row) / (option.maximum - option.minimum)
+	if MovesDrawer(option) then
+		slope = slope + FriendsFrame:GetWidth()
+	end
+	row.dragSlope = slope
+	row.dragOrigin = row.thumb:GetCenter() - addon.settings[option.key] * slope
+	track:SetScript("OnUpdate", Track_OnUpdate)
+	Track_OnUpdate(track)
 end
 
-local function Slider_OnLeave(slider)
-	OptionRow_OnLeave(slider:GetParent())
+local function Track_OnMouseUp(track)
+	track:SetScript("OnUpdate", nil)
+end
+
+local function Track_OnEnter(track)
+	ShowOptionTooltip(track, track:GetParent())
 end
 
 local function CreateSliderRow(option, offsetY)
-	local row = CreateRow("Frame", option, offsetY)
+	local row = CreateFrame("Frame", nil, drawer)
+	row:SetPoint("TOPLEFT", PADDING, offsetY)
+	row:SetPoint("TOPRIGHT", -PADDING, offsetY)
+	row:SetHeight(SLIDER_ROW_HEIGHT)
+	row.option = option
 	row.Refresh = RefreshSliderRow
-	row:EnableMouse(true)
 
-	row.valueText = row:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-	row.valueText:SetPoint("TOPRIGHT", -(PADDING - ROW_INSET), -9)
+	row.label = row:CreateFontString(nil, "ARTWORK", "GameFontHighlight")
+	row.label:SetPoint("TOPLEFT", 4, -2)
+	row.label:SetText(option.label)
+	if option.isNew then
+		row.newBadge = CreateNewBadge(row)
+	end
 
-	local slider = CreateFrame("Slider", nil, row)
-	slider:SetPoint("BOTTOMLEFT", PADDING - ROW_INSET, 6)
-	slider:SetPoint("BOTTOMRIGHT", -(PADDING - ROW_INSET), 6)
-	slider:SetHeight(SLIDER_THUMB_SIZE)
-	slider:SetOrientation("HORIZONTAL")
-	slider:SetMinMaxValues(option.minimum, option.maximum)
-	slider:SetValueStep(option.step)
-	slider:SetObeyStepOnDrag(true)
-	slider:SetHitRectInsets(0, 0, -4, -4)
-	row.slider = slider
+	row.valueText = row:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+	row.valueText:SetPoint("TOPRIGHT", -4, -3)
 
-	row.sliderThumb = CreateCircleTexture(slider, "OVERLAY", SLIDER_THUMB_SIZE)
-	slider:SetThumbTexture(row.sliderThumb)
+	local track = CreateFrame("Frame", nil, row, "BackdropTemplate")
+	track:SetPoint("BOTTOMLEFT", 4, 4)
+	track:SetPoint("BOTTOMRIGHT", -4, 4)
+	track:SetHeight(17)
+	track:SetBackdrop(SLIDER_BACKDROP)
+	track:SetScript("OnMouseDown", Track_OnMouseDown)
+	track:SetScript("OnMouseUp", Track_OnMouseUp)
+	track:SetScript("OnEnter", Track_OnEnter)
+	track:SetScript("OnLeave", GameTooltip_Hide)
+	row.track = track
 
-	row.sliderTrack = CreateSolidTexture(slider, "BACKGROUND", COLORS.trackOff)
-	row.sliderTrack:SetHeight(SLIDER_TRACK_HEIGHT)
-	row.sliderTrack:SetPoint("LEFT")
-	row.sliderTrack:SetPoint("RIGHT")
+	row.thumb = track:CreateTexture(nil, "OVERLAY")
+	row.thumb:SetTexture("Interface\\Buttons\\UI-SliderBar-Button-Horizontal")
+	row.thumb:SetSize(32, 32)
 
-	row.sliderFill = CreateSolidTexture(slider, "ARTWORK", COLORS.accent)
-	row.sliderFill:SetHeight(SLIDER_TRACK_HEIGHT)
-	row.sliderFill:SetPoint("LEFT")
-	row.sliderFill:SetPoint("RIGHT", row.sliderThumb, "CENTER")
-
-	slider:SetScript("OnValueChanged", Slider_OnValueChanged)
-	slider:SetScript("OnEnter", Slider_OnEnter)
-	slider:SetScript("OnLeave", Slider_OnLeave)
+	table.insert(optionRows, row)
 end
 
--- GitHub link -------------------------------------------------------------------------------
+-- Links -------------------------------------------------------------------------------------
 
-local linkOverlay, linkWindow
+local linkOverlay, linkLogo, linkTitle
+local shownLink
+
+local DEFAULT_LOGO_COLOR = { 0.75, 0.75, 0.75 }
+local DEFAULT_LOGO_HOVER_COLOR = { 1, 1, 1 }
+
+local function GetLogoColor(link, isHovered)
+	if isHovered then
+		return unpack(link.logoHoverColor or DEFAULT_LOGO_HOVER_COLOR)
+	end
+	return unpack(link.logoColor or DEFAULT_LOGO_COLOR)
+end
 
 local function SelectLink(linkBox)
-	linkBox:SetText(ISSUES_URL)
+	linkBox:SetText(shownLink.url)
 	linkBox:SetFocus()
 	linkBox:HighlightText()
 end
@@ -338,54 +314,43 @@ local function CloseLinkWindow()
 end
 
 local function CreateLinkWindow()
-	linkOverlay = CreateFrame("Button", nil, panel)
+	linkOverlay = CreateFrame("Button", nil, drawer)
 	linkOverlay:SetAllPoints()
 	linkOverlay:SetFrameStrata("FULLSCREEN_DIALOG")
 	linkOverlay:Hide()
 	local darkening = linkOverlay:CreateTexture(nil, "BACKGROUND")
-	darkening:SetAllPoints()
-	darkening:SetColorTexture(0, 0, 0, 0.7)
+	darkening:SetPoint("TOPLEFT", 11, -12)
+	darkening:SetPoint("BOTTOMRIGHT", -12, 11)
+	darkening:SetColorTexture(0, 0, 0, 0.75)
 	linkOverlay:SetScript("OnClick", CloseLinkWindow)
 
-	linkWindow = CreateFrame("Frame", "ClassicFriendsLinkWindow", linkOverlay, "BackdropTemplate")
-	linkWindow:SetSize(300, 116)
+	local linkWindow = CreateFrame("Frame", "ClassicFriendsLinkWindow", linkOverlay, "BackdropTemplate")
+	linkWindow:SetSize(DRAWER_WIDTH - 40, 120)
 	linkWindow:SetPoint("CENTER")
 	linkWindow:EnableMouse(true)
-	linkWindow:SetBackdrop({ bgFile = WHITE_TEXTURE, edgeFile = WHITE_TEXTURE, edgeSize = 1 })
-	linkWindow:SetBackdropColor(0.09, 0.09, 0.11, 1)
-	linkWindow:SetBackdropBorderColor(unpack(COLORS.accent))
+	linkWindow:SetBackdrop(LINK_WINDOW_BACKDROP)
 
-	local accentLine = CreateSolidTexture(linkWindow, "ARTWORK", COLORS.accent)
-	accentLine:SetPoint("TOPLEFT", 1, -1)
-	accentLine:SetPoint("TOPRIGHT", -1, -1)
-	accentLine:SetHeight(2)
+	linkLogo = linkWindow:CreateTexture(nil, "ARTWORK")
+	linkLogo:SetSize(16, 16)
+	linkLogo:SetPoint("TOPLEFT", 14, -14)
 
-	local githubLogo = linkWindow:CreateTexture(nil, "ARTWORK")
-	githubLogo:SetTexture(GITHUB_LOGO)
-	githubLogo:SetSize(18, 18)
-	githubLogo:SetPoint("TOPLEFT", PADDING, -14)
-
-	local title = linkWindow:CreateFontString(nil, "ARTWORK", "GameFontNormal")
-	title:SetPoint("LEFT", githubLogo, "RIGHT", 8, 0)
-	title:SetText(L.GITHUB_TITLE)
+	linkTitle = linkWindow:CreateFontString(nil, "ARTWORK", "GameFontNormal")
+	linkTitle:SetPoint("LEFT", linkLogo, "RIGHT", 6, 0)
 
 	local closeButton = CreateFrame("Button", nil, linkWindow, "UIPanelCloseButton")
-	closeButton:SetPoint("TOPRIGHT", -4, -4)
+	SkinClassicCloseButton(closeButton)
+	closeButton:SetPoint("TOPRIGHT", 2, 2)
 	closeButton:SetScript("OnClick", CloseLinkWindow)
 
 	local instructions = linkWindow:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-	instructions:SetPoint("TOPLEFT", PADDING, -44)
-	instructions:SetPoint("TOPRIGHT", -PADDING, -44)
+	instructions:SetPoint("TOPLEFT", 14, -40)
+	instructions:SetPoint("TOPRIGHT", -14, -40)
 	instructions:SetJustifyH("LEFT")
 
-	local linkBox = CreateFrame("EditBox", nil, linkWindow, "BackdropTemplate")
-	linkBox:SetPoint("BOTTOMLEFT", PADDING, 16)
-	linkBox:SetPoint("BOTTOMRIGHT", -PADDING, 16)
+	local linkBox = CreateFrame("EditBox", nil, linkWindow, "InputBoxTemplate")
+	linkBox:SetPoint("BOTTOMLEFT", 20, 16)
+	linkBox:SetPoint("BOTTOMRIGHT", -16, 16)
 	linkBox:SetHeight(24)
-	linkBox:SetBackdrop({ bgFile = WHITE_TEXTURE, edgeFile = WHITE_TEXTURE, edgeSize = 1 })
-	linkBox:SetBackdropColor(0, 0, 0, 0.5)
-	linkBox:SetBackdropBorderColor(unpack(COLORS.accent))
-	linkBox:SetTextInsets(8, 8, 0, 0)
 	linkBox:SetFontObject(GameFontHighlightSmall)
 	linkBox:SetAutoFocus(false)
 
@@ -412,6 +377,9 @@ local function CreateLinkWindow()
 	end)
 
 	linkOverlay:SetScript("OnShow", function()
+		linkLogo:SetTexture(shownLink.logo)
+		linkLogo:SetVertexColor(GetLogoColor(shownLink, true))
+		linkTitle:SetText(shownLink.title)
 		instructions:SetText(L.GITHUB_COPY)
 		instructions:SetTextColor(HIGHLIGHT_FONT_COLOR:GetRGB())
 		SelectLink(linkBox)
@@ -421,93 +389,158 @@ local function CreateLinkWindow()
 	end)
 end
 
-local function ShowLinkWindow()
+local function ShowLinkWindow(link)
 	if not linkOverlay then
 		CreateLinkWindow()
 	end
+	shownLink = link
+	linkOverlay:Hide()
 	linkOverlay:Show()
 end
 
-local function CreateGitHubLink(offsetY)
-	local divider = CreateSolidTexture(panel, "ARTWORK", COLORS.divider)
-	divider:SetHeight(1)
-	divider:SetPoint("TOPLEFT", PADDING, offsetY)
-	divider:SetPoint("TOPRIGHT", -PADDING, offsetY)
+local function CreateLinkButton(link, parent)
+	local linkButton = CreateFrame("Button", nil, parent)
+	linkButton:SetHeight(22)
 
-	local linkButton = CreateFrame("Button", nil, panel)
-	linkButton:SetPoint("TOPLEFT", ROW_INSET, offsetY - 4)
-	linkButton:SetPoint("TOPRIGHT", -ROW_INSET, offsetY - 4)
-	linkButton:SetHeight(28)
+	local logo = linkButton:CreateTexture(nil, "ARTWORK")
+	logo:SetTexture(link.logo)
+	logo:SetSize(14, 14)
+	logo:SetPoint("LEFT")
+	logo:SetVertexColor(GetLogoColor(link, false))
 
-	local hoverHighlight = CreateSolidTexture(linkButton, "BACKGROUND", COLORS.hover)
-	hoverHighlight:SetAllPoints()
-	hoverHighlight:Hide()
-
-	local githubLogo = linkButton:CreateTexture(nil, "ARTWORK")
-	githubLogo:SetTexture(GITHUB_LOGO)
-	githubLogo:SetSize(16, 16)
-	githubLogo:SetPoint("LEFT", PADDING - ROW_INSET, 0)
-	githubLogo:SetVertexColor(0.75, 0.75, 0.75)
-
-	local linkText = linkButton:CreateFontString(nil, "ARTWORK", "GameFontHighlightSmall")
-	linkText:SetPoint("LEFT", githubLogo, "RIGHT", 8, 0)
-	linkText:SetText(L.GITHUB_LINK)
-	linkText:SetTextColor(unpack(COLORS.accent))
+	local linkText = linkButton:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+	linkText:SetPoint("LEFT", logo, "RIGHT", 5, 0)
+	linkText:SetText(link.label)
+	linkButton:SetWidth(logo:GetWidth() + 5 + linkText:GetStringWidth())
 
 	linkButton:SetScript("OnEnter", function(self)
-		hoverHighlight:Show()
-		githubLogo:SetVertexColor(1, 1, 1)
-		GameTooltip:SetOwner(self, "ANCHOR_RIGHT", 6, 0)
-		GameTooltip:SetText(L.GITHUB_TITLE, 1, 1, 1)
-		GameTooltip:AddLine(L.GITHUB_TOOLTIP, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
+		logo:SetVertexColor(GetLogoColor(link, true))
+		linkText:SetTextColor(HIGHLIGHT_FONT_COLOR:GetRGB())
+		GameTooltip:SetOwner(self, "ANCHOR_RIGHT")
+		GameTooltip:SetText(link.title, 1, 1, 1)
+		GameTooltip:AddLine(link.tooltip, NORMAL_FONT_COLOR.r, NORMAL_FONT_COLOR.g, NORMAL_FONT_COLOR.b, true)
 		GameTooltip:Show()
 	end)
 	linkButton:SetScript("OnLeave", function()
-		hoverHighlight:Hide()
-		githubLogo:SetVertexColor(0.75, 0.75, 0.75)
+		logo:SetVertexColor(GetLogoColor(link, false))
+		linkText:SetTextColor(NORMAL_FONT_COLOR:GetRGB())
 		GameTooltip:Hide()
 	end)
 	linkButton:SetScript("OnClick", function()
 		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_ON)
-		ShowLinkWindow()
+		ShowLinkWindow(link)
 	end)
 
-	return offsetY - 36
+	return linkButton
 end
 
--- Panel -------------------------------------------------------------------------------------
+local function CreateLinksFooter(offsetY)
+	local footer = CreateFrame("Frame", nil, drawer)
+	footer:SetHeight(22)
+	local footerWidth = 0
+	local previousRegion
+	for _, link in ipairs(LINKS) do
+		if previousRegion then
+			local separator = footer:CreateFontString(nil, "ARTWORK", "GameFontNormalSmall")
+			separator:SetPoint("LEFT", previousRegion, "RIGHT", 10, 0)
+			separator:SetText("||")
+			footerWidth = footerWidth + 10 + separator:GetStringWidth() + 10
+			previousRegion = separator
+		end
+		local linkButton = CreateLinkButton(link, footer)
+		if previousRegion then
+			linkButton:SetPoint("LEFT", previousRegion, "RIGHT", 10, 0)
+		else
+			linkButton:SetPoint("LEFT")
+		end
+		footerWidth = footerWidth + linkButton:GetWidth()
+		previousRegion = linkButton
+	end
+	footer:SetWidth(footerWidth)
+	footer:SetPoint("TOPLEFT", drawer, "TOPLEFT", PADDING + 4, offsetY)
+	return offsetY - 24
+end
 
-function addon.RefreshPanel(skipAnimation)
+-- Smart sorting tip -------------------------------------------------------------------------
+
+local function MarkSmartSortingTipSeen()
+	addon.settings.smartSortingTipSeen = true
+end
+
+local smartSortingTip = {
+	text = L.SMARTSORT_TIP,
+	buttonStyle = HelpTip.ButtonStyle.Close,
+	targetPoint = HelpTip.Point.RightEdgeCenter,
+	offsetX = 4,
+	system = "ClassicFriends",
+	onAcknowledgeCallback = MarkSmartSortingTipSeen,
+}
+
+local function ShowSmartSortingTip()
+	local settings = addon.settings
+	if settings.smartSortingTipSeen or settings.smartSorting or not addon.IsEnabled() then
+		return
+	end
+	HelpTip:Show(FriendsFrame, smartSortingTip, settingsButton)
+end
+
+local function HideSmartSortingTip()
+	MarkSmartSortingTipSeen()
+	HelpTip:Hide(FriendsFrame, smartSortingTip.text)
+end
+
+-- New options -------------------------------------------------------------------------------
+
+local function HasUnseenNewOptions()
+	for _, option in ipairs(addon.options) do
+		if option.isNew and not addon.settings[option.key .. "Seen"] then
+			return true
+		end
+	end
+	return false
+end
+
+function addon.MarkNewOptionsSeen()
+	for _, option in ipairs(addon.options) do
+		if option.isNew then
+			addon.settings[option.key .. "Seen"] = true
+		end
+	end
+end
+
+-- Drawer ------------------------------------------------------------------------------------
+
+function addon.RefreshPanel()
 	if not addon.IsPanelShown() then
 		return
 	end
 	for _, row in ipairs(optionRows) do
 		row.isAvailable = IsOptionAvailable(row.option)
-		row:Refresh(skipAnimation)
-		if not row.isAvailable then
-			row.hoverHighlight:Hide()
-		end
+		row:Refresh()
 	end
 end
 
-local function RestorePanelPosition()
-	local savedPosition = addon.settings.panelPosition
-	panel:ClearAllPoints()
-	if savedPosition then
-		panel:SetPoint(savedPosition.point, UIParent, savedPosition.relativePoint, savedPosition.x, savedPosition.y)
+local function HasRoomOnRight()
+	local windowRight = FriendsFrame:GetRight()
+	if not windowRight then
+		return true
+	end
+	local screenRight = UIParent:GetRight() * UIParent:GetEffectiveScale()
+	local roomOnRight = screenRight - windowRight * FriendsFrame:GetEffectiveScale()
+	return roomOnRight >= DRAWER_WIDTH * drawer:GetEffectiveScale()
+end
+
+local function PlaceDrawer()
+	drawer:ClearAllPoints()
+	isDrawerDocked = addon.IsEnabled() and FriendsFrame:IsShown()
+	isDrawerOnRight = isDrawerDocked and HasRoomOnRight()
+	if not isDrawerDocked then
+		drawer:SetPoint("CENTER", 0, 60)
+	elseif isDrawerOnRight then
+		drawer:SetPoint("TOPLEFT", FriendsFrame, "TOPRIGHT", -2, DRAWER_OFFSET_Y)
 	else
-		panel:SetPoint("CENTER", 0, 60)
+		drawer:SetPoint("TOPRIGHT", FriendsFrame, "TOPLEFT", 2, DRAWER_OFFSET_Y)
 	end
-end
-
-local function StartMovingPanel()
-	panel:StartMoving()
-end
-
-local function StopMovingPanel()
-	panel:StopMovingOrSizing()
-	local point, _, relativePoint, x, y = panel:GetPoint(1)
-	addon.settings.panelPosition = { point = point, relativePoint = relativePoint, x = x, y = y }
 end
 
 local function ShowVersionTooltip(owner)
@@ -520,62 +553,34 @@ local function ShowVersionTooltip(owner)
 	GameTooltip:Show()
 end
 
-local function CreatePanel()
-	panel = CreateFrame("Frame", "ClassicFriendsPanel", UIParent, "BackdropTemplate")
-	panel:SetWidth(PANEL_WIDTH)
-	panel:SetFrameStrata("DIALOG")
-	panel:SetToplevel(true)
-	panel:SetClampedToScreen(true)
-	panel:EnableMouse(true)
-	panel:SetMovable(true)
-	panel:RegisterForDrag("LeftButton")
-	panel:SetScript("OnDragStart", StartMovingPanel)
-	panel:SetScript("OnDragStop", StopMovingPanel)
-	RestorePanelPosition()
-	panel:Hide()
-	table.insert(UISpecialFrames, panel:GetName())
+local function CreateDrawer()
+	drawer = CreateFrame("Frame", "ClassicFriendsOptions", UIParent, "BackdropTemplate")
+	drawer:SetWidth(DRAWER_WIDTH)
+	drawer:SetFrameStrata("HIGH")
+	drawer:EnableMouse(true)
+	drawer:SetBackdrop(DIALOG_BACKDROP)
+	drawer:Hide()
+	table.insert(UISpecialFrames, drawer:GetName())
 
-	panel:SetBackdrop({ bgFile = WHITE_TEXTURE, edgeFile = WHITE_TEXTURE, edgeSize = 1 })
-	panel:SetBackdropColor(unpack(COLORS.background))
-	panel:SetBackdropBorderColor(unpack(COLORS.border))
-
-	local accentLine = CreateSolidTexture(panel, "ARTWORK", COLORS.accent)
-	accentLine:SetPoint("TOPLEFT", 1, -1)
-	accentLine:SetPoint("TOPRIGHT", -1, -1)
-	accentLine:SetHeight(2)
-
-	local addonIcon = panel:CreateTexture(nil, "ARTWORK")
-	addonIcon:SetTexture("Interface\\FriendsFrame\\Battlenet-Portrait")
-	addonIcon:SetSize(30, 30)
-	addonIcon:SetPoint("TOPLEFT", PADDING, -14)
-
-	local title = panel:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
-	title:SetPoint("LEFT", addonIcon, "RIGHT", 10, 0)
+	local title = drawer:CreateFontString(nil, "ARTWORK", "GameFontNormalLarge")
+	title:SetPoint("TOPLEFT", PADDING, -18)
 	title:SetText(L.ADDON_TITLE)
 
-	local titleHoverArea = CreateFrame("Frame", nil, panel)
-	titleHoverArea:SetPoint("TOPLEFT", addonIcon)
-	titleHoverArea:SetPoint("BOTTOMRIGHT", title, "BOTTOMRIGHT", 0, -6)
+	local titleHoverArea = CreateFrame("Frame", nil, drawer)
+	titleHoverArea:SetAllPoints(title)
 	titleHoverArea:EnableMouse(true)
-	titleHoverArea:RegisterForDrag("LeftButton")
-	titleHoverArea:SetScript("OnDragStart", StartMovingPanel)
-	titleHoverArea:SetScript("OnDragStop", StopMovingPanel)
 	titleHoverArea:SetScript("OnEnter", ShowVersionTooltip)
 	titleHoverArea:SetScript("OnLeave", GameTooltip_Hide)
 
-	local closeButton = CreateFrame("Button", nil, panel, "UIPanelCloseButton")
-	closeButton:SetPoint("TOPRIGHT", -4, -4)
+	local closeButton = CreateFrame("Button", nil, drawer, "UIPanelCloseButton")
+	SkinClassicCloseButton(closeButton)
+	closeButton:SetPoint("TOPRIGHT", -6, -6)
 	closeButton:SetScript("OnClick", function()
 		PlaySound(SOUNDKIT.IG_MAINMENU_OPTION_CHECKBOX_OFF)
-		panel:Hide()
+		drawer:Hide()
 	end)
 
-	local headerDivider = CreateSolidTexture(panel, "ARTWORK", COLORS.divider)
-	headerDivider:SetHeight(1)
-	headerDivider:SetPoint("TOPLEFT", PADDING, -56)
-	headerDivider:SetPoint("TOPRIGHT", -PADDING, -56)
-
-	local offsetY = -60
+	local offsetY = -34
 	for _, option in ipairs(addon.options) do
 		if option.header then
 			offsetY = offsetY - SECTION_GAP
@@ -583,64 +588,94 @@ local function CreatePanel()
 			offsetY = offsetY - SECTION_TITLE_HEIGHT
 		elseif option.step then
 			CreateSliderRow(option, offsetY)
-			offsetY = offsetY - ROW_HEIGHT
+			offsetY = offsetY - SLIDER_ROW_HEIGHT
 		else
-			CreateOptionRow(option, offsetY)
-			offsetY = offsetY - ROW_HEIGHT
+			CreateCheckRow(option, offsetY)
+			offsetY = offsetY - CHECK_ROW_HEIGHT
 		end
 	end
-	offsetY = CreateGitHubLink(offsetY - 6)
-	panel:SetHeight(-offsetY + 4)
+	offsetY = CreateLinksFooter(offsetY - 4)
+	drawer:SetHeight(-offsetY + 12)
 
-	local fadeIn = panel:CreateAnimationGroup()
-	local fadeInAlpha = fadeIn:CreateAnimation("Alpha")
-	fadeInAlpha:SetFromAlpha(0)
-	fadeInAlpha:SetToAlpha(1)
-	fadeInAlpha:SetDuration(0.15)
-	fadeInAlpha:SetSmoothing("OUT")
-
-	panel:SetScript("OnShow", function()
-		addon.RefreshPanel(true)
-		fadeIn:Play()
+	drawer:SetScript("OnShow", function()
+		HideSmartSortingTip()
+		addon.MarkNewOptionsSeen()
+		addon.RefreshPanel()
 		PlaySound(SOUNDKIT.IG_MAINMENU_OPEN)
 	end)
-	panel:SetScript("OnHide", function()
+	drawer:SetScript("OnHide", function()
 		GameTooltip:Hide()
 	end)
 end
 
+local function ShowDrawer()
+	if not drawer then
+		CreateDrawer()
+	end
+	PlaceDrawer()
+	drawer:Show()
+end
+
 function addon.IsPanelShown()
-	return panel ~= nil and panel:IsShown()
+	return drawer ~= nil and drawer:IsShown()
 end
 
 function addon.TogglePanel()
-	if not panel then
-		CreatePanel()
+	if addon.IsPanelShown() then
+		drawer:Hide()
+		return
 	end
-	panel:SetShown(not panel:IsShown())
+	if addon.IsEnabled() then
+		addon.ShowClassicWindow()
+	end
+	ShowDrawer()
 end
 
 function ClassicFriends_OnAddonCompartmentClick()
 	addon.TogglePanel()
 end
 
-function addon.CreateSettingsButton()
-	local settingsButton = CreateFrame("Button", "ClassicFriendsSettingsButton", FriendsFrame)
-	settingsButton:SetSize(15, 16)
-	settingsButton:SetPoint("CENTER", FriendsTabHeader.BattlenetFrame.ContactsMenuButton, "BOTTOM", 0, -12)
-	settingsButton:SetFrameLevel(FriendsFrame:GetFrameLevel() + 10)
+-- Settings button ---------------------------------------------------------------------------
 
-	local gearIcon = settingsButton:CreateTexture(nil, "ARTWORK")
-	gearIcon:SetAtlas("questlog-icon-setting", true)
+local function FriendsFrame_OnShow()
+	if addon.IsEnabled() and HasUnseenNewOptions() and not addon.IsPanelShown() then
+		ShowDrawer()
+	else
+		ShowSmartSortingTip()
+	end
+end
+
+local function FriendsFrame_OnHide()
+	if addon.IsPanelShown() and isDrawerDocked then
+		drawer:Hide()
+	end
+end
+
+function addon.CreateSettingsButton()
+	settingsButton = CreateFrame("Button", "ClassicFriendsSettingsButton", FriendsFrame)
+	settingsButton:SetSize(32, 32)
+	settingsButton:SetScale(SETTINGS_BUTTON_SCALE)
+	settingsButton:SetPoint("CENTER", FriendsTabHeader.BattlenetFrame.ContactsMenuButton, "BOTTOM", 0, -12 / SETTINGS_BUTTON_SCALE)
+	settingsButton:SetFrameLevel(FriendsFrame:GetFrameLevel() + 10)
+	settingsButton:SetNormalTexture("Interface\\Buttons\\UI-SquareButton-Up")
+	settingsButton:SetPushedTexture("Interface\\Buttons\\UI-SquareButton-Down")
+	settingsButton:SetHighlightTexture("Interface\\Buttons\\UI-Common-MouseHilight", "ADD")
+
+	local gearIcon = settingsButton:CreateTexture(nil, "OVERLAY")
+	gearIcon:SetAtlas("questlog-icon-setting")
+	gearIcon:SetSize(18, 18)
+	gearIcon:SetVertexColor(1, 0.9, 0.5)
 	gearIcon:SetPoint("CENTER")
-	local gearGlow = settingsButton:CreateTexture(nil, "HIGHLIGHT")
-	gearGlow:SetAtlas("questlog-icon-setting", true)
-	gearGlow:SetPoint("CENTER")
-	gearGlow:SetBlendMode("ADD")
-	gearGlow:SetAlpha(0.4)
+
+	local gearShine = settingsButton:CreateTexture(nil, "OVERLAY", nil, 1)
+	gearShine:SetAtlas("questlog-icon-setting")
+	gearShine:SetAllPoints(gearIcon)
+	gearShine:SetVertexColor(1, 0.85, 0.3)
+	gearShine:SetBlendMode("ADD")
+	gearShine:SetAlpha(0.7)
 
 	settingsButton:SetScript("OnMouseDown", function()
-		gearIcon:SetPoint("CENTER", 1, -1)
+		gearIcon:SetPoint("CENTER", -1, -1)
 	end)
 	settingsButton:SetScript("OnMouseUp", function()
 		gearIcon:SetPoint("CENTER")
@@ -655,4 +690,7 @@ function addon.CreateSettingsButton()
 		GameTooltip:Show()
 	end)
 	settingsButton:SetScript("OnLeave", GameTooltip_Hide)
+
+	FriendsFrame:HookScript("OnShow", FriendsFrame_OnShow)
+	FriendsFrame:HookScript("OnHide", FriendsFrame_OnHide)
 end
