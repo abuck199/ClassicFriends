@@ -49,8 +49,6 @@ L.VERSION_CATA = "Cata Classic"
 L.VERSION_MISTS = "Mists Classic"
 L.VERSION_FOREVER = "Forever"
 L.VERSION_OTHER = "Other version"
-L.RULESET_PVP = "PvP"
-L.RULESET_PVE = "PvE"
 L.OTHER_RULESET_INVITE = "%s realm: you can't group with this friend."
 
 -- Settings panel ----------------------------------------------------------------------------
@@ -146,8 +144,6 @@ if locale == "frFR" then
 	L.VERSION_MISTS = "Mists Classic"
 	L.VERSION_FOREVER = "Forever"
 	L.VERSION_OTHER = "Autre version"
-	L.RULESET_PVP = "JcJ"
-	L.RULESET_PVE = "JcE"
 	L.OTHER_RULESET_INVITE = "Royaume %s : vous ne pouvez pas grouper avec cet ami."
 
 	L.SECTION_GENERAL = "Général"
@@ -308,8 +304,6 @@ if locale == "esES" or locale == "esMX" then
 
 	L.LEVEL_SHORT = "Nv. %d"
 	L.VERSION_OTHER = "Otra versión"
-	L.RULESET_PVP = "JcJ"
-	L.RULESET_PVE = "JcE"
 	L.OTHER_RULESET_INVITE = "Reino %s: no puedes agruparte con este amigo."
 
 	L.SECTION_GENERAL = "General"
@@ -470,8 +464,6 @@ if locale == "ptBR" then
 
 	L.LEVEL_SHORT = "Nv. %d"
 	L.VERSION_OTHER = "Outra versão"
-	L.RULESET_PVP = "JxJ"
-	L.RULESET_PVE = "JxA"
 	L.OTHER_RULESET_INVITE = "Reino %s: você não pode formar grupo com este amigo."
 
 	L.SECTION_GENERAL = "Geral"

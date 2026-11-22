@@ -30,11 +30,6 @@ local GAME_VERSION_NAMES = {
 	[19] = L.VERSION_MISTS,
 }
 
-local RULESET_NAMES = {
-	PvP = L.RULESET_PVP,
-	PvE = L.RULESET_PVE,
-}
-
 local friendWasClicked = false
 local playerRuleset
 
@@ -56,21 +51,31 @@ local function GetCharacterFriendClass(friendInfo)
 	end
 end
 
-local function GetRuleset(realmName)
-	if realmName and not issecretvalue(realmName) then
-		return realmName:match("%d%s*(%a+)$")
+local function GetRuleset(gameInfo)
+	local richPresence = gameInfo and gameInfo.richPresence
+	if issecretvalue(richPresence) or not richPresence then
+		return nil
 	end
+	return richPresence:match("^.- %- (.-) %- ")
 end
 
-local function GetOtherRulesetName(gameInfo)
-	local friendRuleset = GetRuleset(gameInfo.realmName)
-	if friendRuleset and playerRuleset and friendRuleset ~= playerRuleset then
-		return RULESET_NAMES[friendRuleset] or friendRuleset
+local function GetPlayerRuleset()
+	if not playerRuleset then
+		playerRuleset = GetRuleset(C_BattleNet.GetGameAccountInfoByGUID(UnitGUID("player")))
+	end
+	return playerRuleset
+end
+
+local function GetOtherRuleset(gameInfo)
+	local friendRuleset = GetRuleset(gameInfo)
+	local ownRuleset = GetPlayerRuleset()
+	if friendRuleset and ownRuleset and friendRuleset ~= ownRuleset then
+		return friendRuleset
 	end
 end
 
 function addon.IsOnPlayerRuleset(gameInfo)
-	return GetOtherRulesetName(gameInfo) == nil
+	return GetOtherRuleset(gameInfo) == nil
 end
 
 local function GetLevelText(level)
@@ -111,8 +116,13 @@ local function GetCharacterFriendName(friendInfo, settings)
 end
 
 local function ShowDetailsAfterZone(row, details)
-	local detailsText = DETAILS_COLOR_CODE .. L.VERSION_SEPARATOR .. table.concat(details, L.VERSION_SEPARATOR) .. "|r"
-	row.info:SetText(row.info:GetText() .. detailsText)
+	local detailsText = table.concat(details, L.VERSION_SEPARATOR)
+	local infoText = row.info:GetText()
+	if issecretvalue(infoText) or (infoText and infoText ~= "") then
+		row.info:SetText(infoText .. DETAILS_COLOR_CODE .. L.VERSION_SEPARATOR .. detailsText .. "|r")
+	else
+		row.info:SetText(DETAILS_COLOR_CODE .. detailsText .. "|r")
+	end
 end
 
 local function IsInPlayerZone(zoneName)
@@ -163,6 +173,22 @@ end
 
 -- Rows --------------------------------------------------------------------------------------
 
+local function FriendRow_OnEnter(row)
+	if not addon.IsEnabled() or row.buttonType ~= FRIENDS_BUTTON_TYPE_BNET then
+		return
+	end
+	local accountInfo = C_BattleNet.GetFriendAccountInfo(row.id)
+	local gameInfo = accountInfo and accountInfo.gameAccountInfo
+	if not (gameInfo and gameInfo.wowProjectID == WOW_PROJECT_ID and gameInfo.isInCurrentRegion) then
+		return
+	end
+	local zoneName, ruleset = gameInfo.areaName, GetRuleset(gameInfo)
+	if issecretvalue(zoneName) or not zoneName or not ruleset or gameInfo.realmDisplayName then
+		return
+	end
+	FriendsTooltipGameAccount1Info:SetText(BNET_FRIEND_TOOLTIP_ZONE_AND_REALM:format(zoneName, ruleset))
+end
+
 local function InviteButton_OnEnter(inviteButton)
 	if inviteButton.classicFriendsRuleset then
 		local text = L.OTHER_RULESET_INVITE:format(inviteButton.classicFriendsRuleset)
@@ -184,6 +210,8 @@ local function StyleFriendRow(_, row, friendData)
 	if not row.classicFriendsHooked then
 		row:HookScript("OnClick", FriendRow_OnClick)
 		row:HookScript("OnDoubleClick", FriendRow_OnDoubleClick)
+		row:HookScript("OnEnter", FriendRow_OnEnter)
+		hooksecurefunc(row, "OnEnter", FriendRow_OnEnter)
 		row.travelPassButton:HookScript("OnEnter", InviteButton_OnEnter)
 		row.classicFriendsHooked = true
 	end
@@ -199,7 +227,7 @@ local function StyleFriendRow(_, row, friendData)
 	UseDefaultInviteButton(row.travelPassButton)
 
 	local settings = addon.settings
-	local nameText, faction, zoneName, rulesetName
+	local nameText, faction, zoneName, otherRuleset
 	local details = {}
 	local isInSameGame = true
 	if friendData.buttonType == FRIENDS_BUTTON_TYPE_BNET then
@@ -210,13 +238,13 @@ local function StyleFriendRow(_, row, friendData)
 		end
 		faction, zoneName = gameInfo.factionName, gameInfo.areaName
 		isInSameGame = gameInfo.wowProjectID == WOW_PROJECT_ID
-		rulesetName = isInSameGame and GetOtherRulesetName(gameInfo)
+		otherRuleset = isInSameGame and GetOtherRuleset(gameInfo)
 		nameText = settings.classColors and GetBattleNetFriendName(accountInfo, gameInfo)
 		if settings.levels then
 			details = GetBattleNetFriendDetails(gameInfo)
 		end
-		if rulesetName then
-			table.insert(details, rulesetName)
+		if otherRuleset then
+			table.insert(details, otherRuleset)
 		end
 		if isInSameGame and not gameInfo.subIcon then
 			C_Texture.SetTitleIconTexture(row.gameIcon, BNET_CLIENT_WOW, Enum.TitleIconVersion.Medium, FOREVER_GAME_ICON)
@@ -239,9 +267,9 @@ local function StyleFriendRow(_, row, friendData)
 	if #details > 0 then
 		ShowDetailsAfterZone(row, details)
 	end
-	if rulesetName then
+	if otherRuleset then
 		row.travelPassButton:Disable()
-		row.travelPassButton.classicFriendsRuleset = rulesetName
+		row.travelPassButton.classicFriendsRuleset = otherRuleset
 	end
 	if settings.classColors and isInSameGame and IsInPlayerZone(zoneName) then
 		row.info:SetTextColor(SAME_ZONE_TEXT_COLOR:GetRGB())
@@ -263,7 +291,6 @@ local function RefreshFriendRows()
 end
 
 function addon.SetUpFriendRows()
-	playerRuleset = GetRuleset(GetRealmName())
 	ScrollUtil.AddInitializedFrameCallback(FriendsListFrame.ScrollBox, StyleFriendRow, StyleFriendRow)
 
 	hooksecurefunc("FriendsFrame_SelectFriend", HideAutomaticSelection)
