@@ -18,6 +18,7 @@ local DETAILS_COLOR_CODE = "|cffb4b4b4"
 local ZONE_TEXT_COLOR = FRIENDS_GRAY_COLOR
 local SAME_ZONE_TEXT_COLOR = GREEN_FONT_COLOR
 local FOREVER_GAME_ICON = "WoWF"
+local WHISPER_CLICK_WINDOW = 0.4
 
 local GAME_VERSION_NAMES = {
 	[1] = L.VERSION_RETAIL,
@@ -32,6 +33,7 @@ local GAME_VERSION_NAMES = {
 
 local friendWasClicked = false
 local playerRuleset
+local whisperButton, whisperTimer
 
 local function GetClassColorCode(classFile)
 	if not classFile or issecretvalue(classFile) then
@@ -152,22 +154,52 @@ local function HideAutomaticSelection()
 	FriendsFrameSendMessageButton:Disable()
 end
 
+local function HideWhisperButton()
+	if whisperTimer then
+		whisperTimer:Cancel()
+		whisperTimer = nil
+	end
+	if whisperButton and not InCombatLockdown() then
+		whisperButton:Hide()
+	end
+end
+
+local function CreateWhisperButton()
+	local button = CreateFrame("Button", nil, FriendsListFrame, "SecureActionButtonTemplate")
+	button:RegisterForClicks("LeftButtonDown", "LeftButtonUp")
+	button:SetAttribute("type", "click")
+	button:SetAttribute("clickbutton", FriendsFrameSendMessageButton)
+	button:SetPropagateMouseMotion(true)
+	button:SetPropagateMouseClicks(true)
+	button:Hide()
+	return button
+end
+
+local function ShowWhisperButton(row)
+	if InCombatLockdown() then
+		return
+	end
+	whisperButton = whisperButton or CreateWhisperButton()
+	whisperButton:ClearAllPoints()
+	whisperButton:SetAllPoints(row)
+	whisperButton:SetFrameLevel(row:GetFrameLevel() + 10)
+	whisperButton:Show()
+	if whisperTimer then
+		whisperTimer:Cancel()
+	end
+	whisperTimer = C_Timer.NewTimer(WHISPER_CLICK_WINDOW, HideWhisperButton)
+end
+
 local function FriendRow_OnClick(row, mouseButton)
 	if mouseButton ~= "LeftButton" or not addon.IsEnabled() then
 		return
 	end
 	friendWasClicked = true
 	row:LockHighlight()
-	FriendsFrameSendMessageButton:SetEnabled(FriendsList_CanWhisperFriend(row.buttonType, row.id))
-end
-
-local function FriendRow_OnDoubleClick(row, mouseButton)
-	if mouseButton ~= "LeftButton" or not addon.IsEnabled() or not addon.IsFriend(row) then
-		return
-	end
-	if FriendsList_CanWhisperFriend(row.buttonType, row.id) then
-		FriendsFrame_SelectFriend(row.buttonType, row.id)
-		FriendsFrameSendMessageButton_OnClick(FriendsFrameSendMessageButton)
+	local canWhisper = FriendsList_CanWhisperFriend(row.buttonType, row.id)
+	FriendsFrameSendMessageButton:SetEnabled(canWhisper)
+	if canWhisper then
+		ShowWhisperButton(row)
 	end
 end
 
@@ -209,7 +241,6 @@ local function StyleFriendRow(_, row, friendData)
 	end
 	if not row.classicFriendsHooked then
 		row:HookScript("OnClick", FriendRow_OnClick)
-		row:HookScript("OnDoubleClick", FriendRow_OnDoubleClick)
 		row:HookScript("OnEnter", FriendRow_OnEnter)
 		hooksecurefunc(row, "OnEnter", FriendRow_OnEnter)
 		row.travelPassButton:HookScript("OnEnter", InviteButton_OnEnter)
@@ -297,6 +328,7 @@ function addon.SetUpFriendRows()
 	FriendsFrame:HookScript("OnShow", HideAutomaticSelection)
 	FriendsFrame:HookScript("OnHide", function()
 		friendWasClicked = false
+		HideWhisperButton()
 	end)
 
 	addon.OnOptionChanged("factionColors", RefreshFriendRows)
@@ -305,5 +337,12 @@ function addon.SetUpFriendRows()
 
 	local eventFrame = CreateFrame("Frame")
 	eventFrame:RegisterEvent("ZONE_CHANGED_NEW_AREA")
-	eventFrame:SetScript("OnEvent", RefreshFriendRows)
+	eventFrame:RegisterEvent("PLAYER_REGEN_DISABLED")
+	eventFrame:SetScript("OnEvent", function(_, event)
+		if event == "PLAYER_REGEN_DISABLED" then
+			HideWhisperButton()
+		else
+			RefreshFriendRows()
+		end
+	end)
 end
