@@ -6,7 +6,6 @@ Brings back the Classic Era friends list in WoW Forever, instead of the new soci
 - Search by name, BattleTag, class or zone
 - Faction and class colors
 - Smart sorting: friends you can invite first
-- Double-click a friend to whisper
 - Adjustable window size and height
 - Friends / Who / Guild / Raid tabs
 - Minimap button
